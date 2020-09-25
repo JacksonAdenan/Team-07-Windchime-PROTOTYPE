@@ -11,13 +11,17 @@ public class MouseLook : MonoBehaviour
 {
 
     public float mouseSensitivity = 100f;
+    public float handControlSensitivity = 100f;
+    public float handZDistance = 0.7f;
     public Transform playerBody;
+    public Material selectedMat;
 
     public Transform hand;
     Vector3 handPos;
-
+    private Transform selectedObj;
+    private Material defaultMat;
     float xRotation = 0.0f;
-
+    RaycastHit raycastHit;
     private CameraMode cameraMode = CameraMode.lookMode;
     // Start is called before the first frame update
     void Start()
@@ -29,7 +33,7 @@ public class MouseLook : MonoBehaviour
     void Update()
     {
         SetCameraMode();
-        
+        Debug.DrawRay(hand.position, hand.forward * 10, Color.green);
 
 
         if (cameraMode == CameraMode.lookMode)
@@ -46,8 +50,29 @@ public class MouseLook : MonoBehaviour
 
         else if (cameraMode == CameraMode.handMode)
         {
-            float mouseX = Input.GetAxis("Mouse X") * mouseSensitivity * Time.deltaTime;
-            float mouseY = Input.GetAxis("Mouse Y") * mouseSensitivity * Time.deltaTime;
+            
+            Physics.Raycast(hand.position, hand.forward * 10, out raycastHit);
+            if (raycastHit.transform != null && raycastHit.transform.CompareTag("Item"))
+            {
+                selectedObj = raycastHit.transform;
+                defaultMat = selectedObj.GetComponent<Renderer>().material;
+
+            }
+            else
+            {
+                selectedObj = null;
+            }
+            if (selectedObj != null)
+            {
+                selectedObj.GetComponent<Renderer>().material = selectedMat;
+            }
+            else
+            {
+                selectedObj.GetComponent<Renderer>().material = defaultMat;
+            }
+
+            float mouseX = Input.GetAxis("Mouse X") * handControlSensitivity * Time.deltaTime;
+            float mouseY = Input.GetAxis("Mouse Y") * handControlSensitivity * Time.deltaTime;
 
             
             
@@ -60,7 +85,9 @@ public class MouseLook : MonoBehaviour
             hand.transform.position += handMovement * Time.deltaTime;
 
             handPos = hand.transform.localPosition;
-            handPos.z = Mathf.Clamp(handPos.z, 0.7f, 0.7f);
+            handPos.z = Mathf.Clamp(handPos.z, handZDistance, handZDistance);
+            handPos.y = Mathf.Clamp(handPos.y, -0.3f, 0.3f);
+            handPos.x = Mathf.Clamp(handPos.x, -0.5f, 0.5f);
             hand.transform.localPosition = handPos;
 
             
