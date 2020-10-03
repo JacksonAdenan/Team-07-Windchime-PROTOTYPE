@@ -28,6 +28,8 @@ public class MouseLook : MonoBehaviour
     // ------------------------------------------ //
 
 
+
+    bool isHoldingItem = false;
     Vector3 handPos;
     private CameraMode cameraMode = CameraMode.lookMode;
     private Transform selectedObj;
@@ -87,14 +89,25 @@ public class MouseLook : MonoBehaviour
 
         if (selectedObj)
         {
-            PickUpUI.gameObject.SetActive(true);
+            if (!isHoldingItem)
+            {
+                PickUpUI.gameObject.SetActive(true);
+            }
+            else
+            {
+                PickUpUI.gameObject.SetActive(false);
+            }
             Vector3 UIPos = selectedObj.position;
             UIPos.y += PickUpUIPos;
             PickUpUI.transform.position = UIPos;
             PickUpUI.transform.LookAt(gameObject.transform);
-            if (Input.GetKeyDown(KeyCode.E))
+            if (Input.GetKeyDown(KeyCode.E) && !isHoldingItem)
             {
                 PickUpItem(selectedObj);
+            }
+            else if (Input.GetKeyDown(KeyCode.E) && isHoldingItem)
+            {
+                DropItem(selectedObj);
             }
         }
         else
@@ -145,7 +158,14 @@ public class MouseLook : MonoBehaviour
 
     void PickUpItem(Transform itemToPickUp)
     {
+        isHoldingItem = true;
         itemToPickUp.SetParent(hand);
-        itemToPickUp.position = Vector3.zero;
+        itemToPickUp.localPosition = new Vector3(0, 0, -5);
+    }
+    void DropItem(Transform itemToDrop)
+    {
+        isHoldingItem = false;
+        itemToDrop.parent = null;
+
     }
 }
