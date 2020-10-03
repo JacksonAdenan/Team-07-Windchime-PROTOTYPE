@@ -88,10 +88,14 @@ public class MouseLook : MonoBehaviour
         if (selectedObj)
         {
             PickUpUI.gameObject.SetActive(true);
-            PickUpUI.transform.LookAt(gameObject.transform);
             Vector3 UIPos = selectedObj.position;
             UIPos.y += PickUpUIPos;
             PickUpUI.transform.position = UIPos;
+            PickUpUI.transform.LookAt(gameObject.transform);
+            if (Input.GetKeyDown(KeyCode.E))
+            {
+                PickUpItem(selectedObj);
+            }
         }
         else
         {
@@ -106,13 +110,13 @@ public class MouseLook : MonoBehaviour
         {
             cameraMode = CameraMode.handMode;
         }
-        else if (Input.GetMouseButton(2))
-        {
-            cameraMode = CameraMode.lookMode;
-        }
         else if (Input.GetKeyDown(KeyCode.Escape))
         {
             cameraMode = CameraMode.pauseMode;
+        }
+        else if(Input.GetMouseButtonUp(1) && cameraMode != CameraMode.pauseMode)
+        {
+            cameraMode = CameraMode.lookMode;
         }
     }
 
@@ -137,5 +141,11 @@ public class MouseLook : MonoBehaviour
             }
             selectedObj = null;
         }
+    }
+
+    void PickUpItem(Transform itemToPickUp)
+    {
+        itemToPickUp.SetParent(hand);
+        itemToPickUp.position = Vector3.zero;
     }
 }
