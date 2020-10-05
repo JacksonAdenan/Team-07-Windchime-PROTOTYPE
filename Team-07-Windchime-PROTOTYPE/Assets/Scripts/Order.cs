@@ -2,17 +2,18 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Order : MonoBehaviour
+public class Order
 {
-    // Start is called before the first frame update
-    void Start()
+    public Soup mainSoup;
+    public Colour colourPreference;
+    public bool isSpicy;
+    public bool isChunky;
+    public Order(Soup mainSoup, Colour colourPreference, bool isSpicy, bool isChunky)
     {
-        
+        this.mainSoup = mainSoup;
+        this.colourPreference = colourPreference;
+        this.isSpicy = isSpicy;
+        this.isChunky = isChunky;
     }
-
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
+    
 }

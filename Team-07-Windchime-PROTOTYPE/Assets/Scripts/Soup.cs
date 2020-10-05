@@ -4,15 +4,18 @@ using UnityEngine;
 
 public class Soup
 {
-    // Start is called before the first frame update
-    void Start()
+    public string soupName;
+    public Ingridient core1;
+    public Ingridient core2;
+    public Ingridient core3;
+    public bool isSpicy;
+    public bool isChunky;
+    public Colour colour;
+    public Soup(string name, Ingridient core1, Ingridient core2, Ingridient core3)
     {
-        
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        
+        soupName = name;
+        this.core1 = core1;
+        this.core2 = core2;
+        this.core3 = core3;
     }
 }

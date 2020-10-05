@@ -2,14 +2,11 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Ingridient : MonoBehaviour
+public class IngridientCreator : MonoBehaviour
 {
-    public string name;
-    public Transform prefab;
-    public Ingridient(string name)
-    {
-        this.name = name;
-    }
+    public Transform apple;
+    public Transform banana;
+    public Transform orange;
     // Start is called before the first frame update
     void Start()
     {

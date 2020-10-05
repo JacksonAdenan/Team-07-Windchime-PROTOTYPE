@@ -2,14 +2,12 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Ingridient : MonoBehaviour
+public class SoupCreator : MonoBehaviour
 {
-    public string name;
-    public Transform prefab;
-    public Ingridient(string name)
-    {
-        this.name = name;
-    }
+    public string soupName;
+    public Transform core1;
+    public Transform core2;
+    public Transform core3;
     // Start is called before the first frame update
     void Start()
     {
