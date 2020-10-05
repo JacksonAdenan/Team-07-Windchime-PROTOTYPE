@@ -37,29 +37,54 @@ public class MenuManager : MonoBehaviour
         TMP_Dropdown colourDropdown = orderOrganiser.Find("colourDropdown").GetComponent<TMP_Dropdown>();
         TextMeshProUGUI colourDropdownLabel = colourDropdown.transform.Find("Label").GetComponent<TextMeshProUGUI>();
 
+        if (!soupOrganiser.transform.Find("soup1Name"))
+        {
+            Debug.Log("BROKEN");
+        }
+        if (!orderOrganiser.Find("soupDropdown").GetComponent<TMP_Dropdown>())
+        {
+            Debug.Log("BROKEN");
+        }
+        if (!soupDropdown.transform.Find("Label").GetComponent<TextMeshProUGUI>())
+        {
+            Debug.Log("BROKEN");
+        }
+        if (!orderOrganiser.Find("colourDropdown").GetComponent<TMP_Dropdown>())
+        {
+            Debug.Log("BROKEN");
+        }
+        if (!colourDropdown.transform.Find("Label").GetComponent<TextMeshProUGUI>())
+        {
+            Debug.Log("BROKEN");
+        }
+        if (CookingManager.allSoups.Count > 0)
+        {
+            Debug.Log("hello");
+        }
 
-        soupOrganiser.transform.Find("soup1Name").GetComponent<TextMeshProUGUI>().text = CookingManager.allSoups[0].soupName;
-        soup1Parent.transform.Find("core1").GetComponent<TextMeshProUGUI>().text = CookingManager.allSoups[0].core1.name.ToString();
-        soup1Parent.transform.Find("core2").GetComponent<TextMeshProUGUI>().text = CookingManager.allSoups[0].core2.name.ToString();
-        soup1Parent.transform.Find("core3").GetComponent<TextMeshProUGUI>().text = CookingManager.allSoups[0].core3.name.ToString();
 
-        soupOrganiser.transform.Find("soup2Name").GetComponent<TextMeshProUGUI>().text = CookingManager.allSoups[1].soupName;
-        soup2Parent.transform.Find("core1").GetComponent<TextMeshProUGUI>().text = CookingManager.allSoups[1].core1.name.ToString();
-        soup2Parent.transform.Find("core2").GetComponent<TextMeshProUGUI>().text = CookingManager.allSoups[1].core2.name.ToString();
-        soup2Parent.transform.Find("core3").GetComponent<TextMeshProUGUI>().text = CookingManager.allSoups[1].core3.name.ToString();
+        //soupOrganiser.transform.Find("soup1Name").GetComponent<TextMeshProUGUI>().text = CookingManager.allSoups[0].soupName;
+        //soup1Parent.transform.Find("core1").GetComponent<TextMeshProUGUI>().text = CookingManager.allSoups[0].core1.name.ToString();
+        //soup1Parent.transform.Find("core2").GetComponent<TextMeshProUGUI>().text = CookingManager.allSoups[0].core2.name.ToString();
+        //soup1Parent.transform.Find("core3").GetComponent<TextMeshProUGUI>().text = CookingManager.allSoups[0].core3.name.ToString();
+        //
+        //soupOrganiser.transform.Find("soup2Name").GetComponent<TextMeshProUGUI>().text = CookingManager.allSoups[1].soupName;
+        //soup2Parent.transform.Find("core1").GetComponent<TextMeshProUGUI>().text = CookingManager.allSoups[1].core1.name.ToString();
+        //soup2Parent.transform.Find("core2").GetComponent<TextMeshProUGUI>().text = CookingManager.allSoups[1].core2.name.ToString();
+        //soup2Parent.transform.Find("core3").GetComponent<TextMeshProUGUI>().text = CookingManager.allSoups[1].core3.name.ToString();
+        //
+        //soupOrganiser.transform.Find("soup3Name").GetComponent<TextMeshProUGUI>().text = CookingManager.allSoups[2].soupName;
+        //soup3Parent.transform.Find("core1").GetComponent<TextMeshProUGUI>().text = CookingManager.allSoups[2].core1.name.ToString();
+        //soup3Parent.transform.Find("core2").GetComponent<TextMeshProUGUI>().text = CookingManager.allSoups[2].core2.name.ToString();
+        //soup3Parent.transform.Find("core3").GetComponent<TextMeshProUGUI>().text = CookingManager.allSoups[2].core3.name.ToString();
 
-        soupOrganiser.transform.Find("soup3Name").GetComponent<TextMeshProUGUI>().text = CookingManager.allSoups[2].soupName;
-        soup3Parent.transform.Find("core1").GetComponent<TextMeshProUGUI>().text = CookingManager.allSoups[2].core1.name.ToString();
-        soup3Parent.transform.Find("core2").GetComponent<TextMeshProUGUI>().text = CookingManager.allSoups[2].core2.name.ToString();
-        soup3Parent.transform.Find("core3").GetComponent<TextMeshProUGUI>().text = CookingManager.allSoups[2].core3.name.ToString();
-
-        soupDropdown.options.Clear();
-        soupDropdownLabel.text = "Soup Recipe";
-
-        colourDropdown.options.Clear();
-        colourDropdownLabel.text = "Colour Preference";
-
-        PopulateSoupDropdownOptions(soupDropdown);
+        //soupDropdown.options.Clear();
+        //soupDropdownLabel.text = "Soup Recipe";
+        //
+        //colourDropdown.options.Clear();
+        //colourDropdownLabel.text = "Colour Preference";
+        //
+        //PopulateSoupDropdownOptions(soupDropdown);
 
 
 

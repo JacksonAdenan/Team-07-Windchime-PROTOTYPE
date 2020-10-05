@@ -13,7 +13,8 @@ public class CookingManager : MonoBehaviour
     public static List<Soup> allSoups;
 
     public GameObject allSoupsObject;
-    
+
+
 
     // Start is called before the first frame update
     void Start()
