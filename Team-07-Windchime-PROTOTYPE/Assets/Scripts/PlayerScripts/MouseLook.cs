@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-enum CameraMode
+public enum CameraMode
 { 
     lookMode,
     handMode,
@@ -31,7 +31,7 @@ public class MouseLook : MonoBehaviour
 
     bool isHoldingItem = false;
     Vector3 handPos;
-    private CameraMode cameraMode = CameraMode.lookMode;
+    public CameraMode currentCameraMode = CameraMode.lookMode;
     private Transform selectedObj;
     private Material defaultMat;
     float xRotation = 0.0f;
@@ -48,42 +48,10 @@ public class MouseLook : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        SetCameraMode();
+        CameraState();
         Debug.DrawRay(hand.position, hand.forward * 10, Color.green);
 
 
-        if (cameraMode == CameraMode.lookMode)
-        {
-            float mouseX = Input.GetAxis("Mouse X") * mouseSensitivity * Time.deltaTime;
-            float mouseY = Input.GetAxis("Mouse Y") * mouseSensitivity * Time.deltaTime;
-
-            xRotation -= mouseY;
-            xRotation = Mathf.Clamp(xRotation, -90f, 90f);
-
-            transform.localRotation = Quaternion.Euler(xRotation, 0f, 0f);
-            playerBody.Rotate(Vector3.up * mouseX);
-        }
-
-        else if (cameraMode == CameraMode.handMode)
-        {
-            float mouseX = Input.GetAxis("Mouse X") * handControlSensitivity * Time.deltaTime;
-            float mouseY = Input.GetAxis("Mouse Y") * handControlSensitivity * Time.deltaTime;
-
-            Vector3 handMovement = transform.right * mouseX + transform.up * mouseY;
-
-
-            hand.transform.position += handMovement * Time.deltaTime;
-
-            handPos = hand.transform.localPosition;
-            handPos.z = Mathf.Clamp(handPos.z, handZDistance, handZDistance);
-            handPos.y = Mathf.Clamp(handPos.y, -0.3f, 0.3f);
-            handPos.x = Mathf.Clamp(handPos.x, -0.5f, 0.5f);
-            hand.transform.localPosition = handPos;
-        }
-        else if (cameraMode == CameraMode.pauseMode)
-        { 
-            
-        }
 
         SelectObj();
 
@@ -116,21 +84,67 @@ public class MouseLook : MonoBehaviour
         }
 
     }
-
-    void SetCameraMode()
+    void CameraState()
     {
-        if (Input.GetMouseButton(1))
+        switch (currentCameraMode)
         {
-            cameraMode = CameraMode.handMode;
+            case CameraMode.lookMode:
+                CameraLook();
+                if (Input.GetMouseButtonDown(1))
+                {
+                    currentCameraMode = CameraMode.handMode;
+                }
+                break;
+            case CameraMode.handMode:
+                CameraHandControl();
+                if (Input.GetMouseButtonDown(1))
+                {
+                    currentCameraMode = CameraMode.lookMode;
+                }
+                break;
+            case CameraMode.pauseMode:
+                CameraPause();
+                Debug.Log("Camera in pause mode.");
+                //if (Input.GetKeyDown(KeyCode.Escape))
+                //{
+                //    currentCameraMode = CameraMode.lookMode;
+                //}
+                break;
         }
-        else if (Input.GetKeyDown(KeyCode.Escape))
-        {
-            cameraMode = CameraMode.pauseMode;
-        }
-        else if(Input.GetMouseButtonUp(1) && cameraMode != CameraMode.pauseMode)
-        {
-            cameraMode = CameraMode.lookMode;
-        }
+    }
+
+    void CameraLook()
+    {
+        float mouseX = Input.GetAxis("Mouse X") * mouseSensitivity * Time.deltaTime;
+        float mouseY = Input.GetAxis("Mouse Y") * mouseSensitivity * Time.deltaTime;
+
+        xRotation -= mouseY;
+        xRotation = Mathf.Clamp(xRotation, -90f, 90f);
+
+        transform.localRotation = Quaternion.Euler(xRotation, 0f, 0f);
+        playerBody.Rotate(Vector3.up * mouseX);
+    }
+
+    void CameraHandControl()
+    {
+        float mouseX = Input.GetAxis("Mouse X") * handControlSensitivity * Time.deltaTime;
+        float mouseY = Input.GetAxis("Mouse Y") * handControlSensitivity * Time.deltaTime;
+
+        Vector3 handMovement = transform.right * mouseX + transform.up * mouseY;
+
+
+        hand.transform.position += handMovement * Time.deltaTime;
+
+        handPos = hand.transform.localPosition;
+        handPos.z = Mathf.Clamp(handPos.z, handZDistance, handZDistance);
+        handPos.y = Mathf.Clamp(handPos.y, -0.3f, 0.3f);
+        handPos.x = Mathf.Clamp(handPos.x, -0.5f, 0.5f);
+        hand.transform.localPosition = handPos;
+    }
+
+    void CameraPause()
+    { 
+        
     }
 
     void SelectObj()
