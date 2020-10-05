@@ -32,14 +32,14 @@ public class MenuManager : MonoBehaviour
         soup1Parent.transform.Find("core3").GetComponent<TextMeshProUGUI>().text = CookingManager.allSoups[0].core3.name.ToString();
 
         orderUI.transform.Find("soup2Name").GetComponent<TextMeshProUGUI>().text = CookingManager.allSoups[1].soupName;
-        soup2Parent.transform.Find("core1").GetComponent<TextMeshProUGUI>().text = CookingManager.allSoups[0].core1.name.ToString();
-        soup2Parent.transform.Find("core2").GetComponent<TextMeshProUGUI>().text = CookingManager.allSoups[0].core2.name.ToString();
-        soup2Parent.transform.Find("core3").GetComponent<TextMeshProUGUI>().text = CookingManager.allSoups[0].core3.name.ToString();
+        soup2Parent.transform.Find("core1").GetComponent<TextMeshProUGUI>().text = CookingManager.allSoups[1].core1.name.ToString();
+        soup2Parent.transform.Find("core2").GetComponent<TextMeshProUGUI>().text = CookingManager.allSoups[1].core2.name.ToString();
+        soup2Parent.transform.Find("core3").GetComponent<TextMeshProUGUI>().text = CookingManager.allSoups[1].core3.name.ToString();
         
         orderUI.transform.Find("soup3Name").GetComponent<TextMeshProUGUI>().text = CookingManager.allSoups[2].soupName;
-        soup3Parent.transform.Find("core1").GetComponent<TextMeshProUGUI>().text = CookingManager.allSoups[0].core1.name.ToString();
-        soup3Parent.transform.Find("core2").GetComponent<TextMeshProUGUI>().text = CookingManager.allSoups[0].core2.name.ToString();
-        soup3Parent.transform.Find("core3").GetComponent<TextMeshProUGUI>().text = CookingManager.allSoups[0].core3.name.ToString();
+        soup3Parent.transform.Find("core1").GetComponent<TextMeshProUGUI>().text = CookingManager.allSoups[2].core1.name.ToString();
+        soup3Parent.transform.Find("core2").GetComponent<TextMeshProUGUI>().text = CookingManager.allSoups[2].core2.name.ToString();
+        soup3Parent.transform.Find("core3").GetComponent<TextMeshProUGUI>().text = CookingManager.allSoups[2].core3.name.ToString();
 
 
     }
