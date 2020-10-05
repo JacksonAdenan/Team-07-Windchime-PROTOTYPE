@@ -10,7 +10,7 @@ using UnityEngine;
 public class CookingManager : MonoBehaviour
 {
     List<Ingridient> allIngridients;
-    List<Soup> allSoups;
+    public static List<Soup> allSoups;
 
     public GameObject allSoupsObject;
     
@@ -26,6 +26,9 @@ public class CookingManager : MonoBehaviour
 
         // Reading in and creating all the soups //
         PopulateSoupList();
+
+        // Printing out names of all soups.
+        DisplaySoups();
     }
 
     // Update is called once per frame
@@ -45,7 +48,7 @@ public class CookingManager : MonoBehaviour
         Ingridient core2 = ConvertTransformToIngridient(soupsData.core2);
         Ingridient core3 = ConvertTransformToIngridient(soupsData.core3);
 
-        Soup newSoup = new Soup(soupsData.name, core1, core2, core3);
+        Soup newSoup = new Soup(soupsData.soupName, core1, core2, core3);
         return newSoup;
 
     }

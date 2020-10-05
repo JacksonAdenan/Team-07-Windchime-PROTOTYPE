@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Ingridient : MonoBehaviour
+public class Ingridient
 {
     public string name;
     public Transform prefab;
@@ -10,15 +10,5 @@ public class Ingridient : MonoBehaviour
     {
         this.name = name;
     }
-    // Start is called before the first frame update
-    void Start()
-    {
-        
-    }
 
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
 }
