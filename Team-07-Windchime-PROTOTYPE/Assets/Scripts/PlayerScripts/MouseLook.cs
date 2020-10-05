@@ -104,11 +104,8 @@ public class MouseLook : MonoBehaviour
                 break;
             case CameraMode.pauseMode:
                 CameraPause();
-                Debug.Log("Camera in pause mode.");
-                //if (Input.GetKeyDown(KeyCode.Escape))
-                //{
-                //    currentCameraMode = CameraMode.lookMode;
-                //}
+                Cursor.lockState = CursorLockMode.None;
+                
                 break;
         }
     }
