@@ -4,13 +4,10 @@ using UnityEngine;
 
 public class OrderManager : MonoBehaviour
 {
-    private List<Soup> allSoups = new List<Soup>();
+    public static List<Order> currentOrder;
 
-    void ReadAllSoups(GameObject soupContainerObject)
+    void Start()
     {
-        for (int i = 0; i < soupContainerObject.transform.childCount; i++)
-        { 
-            //allSoups.Add(soupContainerObject.transform.GetChild()
-        }
+        currentOrder = new List<Order>();
     }
 }

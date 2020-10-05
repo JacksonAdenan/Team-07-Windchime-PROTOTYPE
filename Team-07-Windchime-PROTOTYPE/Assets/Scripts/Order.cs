@@ -8,7 +8,9 @@ public class Order
     public Colour colourPreference;
     public bool isSpicy;
     public bool isChunky;
-    public Order(Soup mainSoup, Colour colourPreference, bool isSpicy, bool isChunky)
+    public bool noMeat;
+    public bool noVeg;
+    public Order(Soup mainSoup, Colour colourPreference, bool isSpicy, bool isChunky, bool meatPreference, bool vegPreference)
     {
         this.mainSoup = mainSoup;
         this.colourPreference = colourPreference;

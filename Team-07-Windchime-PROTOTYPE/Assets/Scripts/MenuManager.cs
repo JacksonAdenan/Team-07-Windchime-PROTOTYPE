@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
-
+using UnityEngine.UI;
 
 public enum MenuState
 { 
@@ -21,6 +21,12 @@ public class MenuManager : MonoBehaviour
 
     public Canvas orderUI;
     public Canvas pauseUI;
+
+    TMP_Dropdown soupDropdown;
+    Toggle spicyToggle;
+    Toggle chunkyToggle;
+
+
     // Start is called before the first frame update
     void Start()
     {
@@ -33,14 +39,17 @@ public class MenuManager : MonoBehaviour
         Transform soup2Parent = soupOrganiser.transform.Find("soup2Name");
         Transform soup3Parent = soupOrganiser.transform.Find("soup3Name");
 
-        TMP_Dropdown soupDropdown = orderOrganiser.Find("soupDropdown").GetComponent<TMP_Dropdown>();
+        soupDropdown = orderOrganiser.Find("soupDropdown").GetComponent<TMP_Dropdown>();
         TextMeshProUGUI soupDropdownLabel = soupDropdown.transform.Find("Label").GetComponent<TextMeshProUGUI>();
 
         TMP_Dropdown colourDropdown = orderOrganiser.Find("colourDropdown").GetComponent<TMP_Dropdown>();
         TextMeshProUGUI colourDropdownLabel = colourDropdown.transform.Find("Label").GetComponent<TextMeshProUGUI>();
 
+        TMP_Dropdown meatVegDropdown = orderOrganiser.Find("meatVegDropdown").GetComponent<TMP_Dropdown>();
+        TextMeshProUGUI meatVegDropdownLabel = meatVegDropdown.transform.Find("Label").GetComponent<TextMeshProUGUI>();
 
-        
+        spicyToggle = orderOrganiser.Find("spicyToggle").GetComponent<Toggle>();
+        chunkyToggle = orderOrganiser.Find("chunkyToggle").GetComponent<Toggle>();
 
         soupOrganiser.transform.Find("soup1Name").GetComponent<TextMeshProUGUI>().text = CookingManager.allSoups[0].soupName;
         soup1Parent.transform.Find("core1").GetComponent<TextMeshProUGUI>().text = CookingManager.allSoups[0].core1.name.ToString();
@@ -61,11 +70,14 @@ public class MenuManager : MonoBehaviour
         soupDropdownLabel.text = "Soup Recipe";
         
         colourDropdown.options.Clear();
-        colourDropdownLabel.text = "Colour Preference";
-        
+        colourDropdownLabel.text = "None";
+
+        meatVegDropdown.options.Clear();
+        meatVegDropdownLabel.text = "None";
+
         PopulateSoupDropdownOptions(soupDropdown);
-
-
+        PopulateColourDropdownOptions(colourDropdown);
+        PopulateMeatVegDropdownOptions(meatVegDropdown);
 
 
     }
@@ -119,20 +131,49 @@ public class MenuManager : MonoBehaviour
 
     void PopulateSoupDropdownOptions(TMP_Dropdown dropDownBox)
     {
-        //for (int i = 0; i < CookingManager.allSoups.Count; i++)
-        //{
-        //    
-        //    dropDownBox.options.Add(new TMP_Dropdown.OptionData(CookingManager.allSoups[i].soupName));
-        //}
+        for (int i = 0; i < CookingManager.allSoups.Count; i++)
+        {
+            
+            dropDownBox.options.Add(new TMP_Dropdown.OptionData(CookingManager.allSoups[i].soupName));
+        }
     }
     void PopulateColourDropdownOptions(TMP_Dropdown dropDownBox)
     {
-        //for (int i = 0; i < CookingManager.allSoups.Count; i++)
-        //{
-        //
-        //    dropDownBox.options.Add(new TMP_Dropdown.OptionData(CookingManager.allSoups[i].soupName));
-        //}
+        dropDownBox.options.Add(new TMP_Dropdown.OptionData("None"));
     }
+
+    void PopulateMeatVegDropdownOptions(TMP_Dropdown dropDownBox)
+    {
+        dropDownBox.options.Add(new TMP_Dropdown.OptionData("None"));
+        dropDownBox.options.Add(new TMP_Dropdown.OptionData("No Meat"));
+        dropDownBox.options.Add(new TMP_Dropdown.OptionData("No Greens"));
+    }
+
+
+    public void CreateOrder()
+    {
+        Soup mainRecipe = GetSoupFromDropdown(soupDropdown.value);
+        bool isSpicy = spicyToggle.isOn;
+        bool isChunky = chunkyToggle.isOn;
+
+        Debug.Log(mainRecipe.soupName);
+        Debug.Log(isSpicy.ToString());
+        Debug.Log(isChunky.ToString());
+
+    }
+
+    Soup GetSoupFromDropdown(int selected)
+    {
+        for (int i = 0; i < CookingManager.allSoups.Count; i++)
+        {
+            if (soupDropdown.options[selected].text == CookingManager.allSoups[i].soupName)
+            {
+                return CookingManager.allSoups[i];
+            }
+        }
+        return null;
+    }
+
 }
 
 
