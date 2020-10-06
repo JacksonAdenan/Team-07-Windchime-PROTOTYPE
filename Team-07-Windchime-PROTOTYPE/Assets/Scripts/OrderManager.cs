@@ -4,10 +4,16 @@ using UnityEngine;
 
 public class OrderManager : MonoBehaviour
 {
-    public static List<Order> currentOrder;
+    public static List<Order> currentOrders;
 
     void Start()
     {
-        currentOrder = new List<Order>();
+        currentOrders = new List<Order>();
+    }
+
+    public static void AddOrder(Order orderToAdd)
+    {
+        currentOrders.Clear();
+        currentOrders.Add(orderToAdd);
     }
 }

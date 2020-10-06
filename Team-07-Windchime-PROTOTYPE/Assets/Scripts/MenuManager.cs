@@ -30,14 +30,33 @@ public class MenuManager : MonoBehaviour
     Toggle spicyToggle;
     Toggle chunkyToggle;
 
+    TextMeshProUGUI orderCreatedText;
+    float orderCreatedTextTimer;
+
+    // Current order text stuff //
+    TextMeshProUGUI soup;
+    TextMeshProUGUI colour;
+    TextMeshProUGUI meatVeg;
+    TextMeshProUGUI spicy;
+    TextMeshProUGUI chunky;
 
     // Start is called before the first frame update
     void Start()
     {
-        
 
         Transform soupOrganiser = orderUI.transform.Find("SoupStuff");
         Transform orderOrganiser = orderUI.transform.Find("OrderCreationStuff");
+        Transform currentOrderOrganiser = orderUI.transform.Find("OrderList");
+
+        soup = currentOrderOrganiser.Find("soupName").GetComponent<TextMeshProUGUI>();
+        colour = currentOrderOrganiser.Find("colourPreference").GetComponent<TextMeshProUGUI>();
+        meatVeg = currentOrderOrganiser.Find("meatVegPref").GetComponent<TextMeshProUGUI>();
+        spicy = currentOrderOrganiser.Find("spicy").GetComponent<TextMeshProUGUI>();
+        chunky = currentOrderOrganiser.Find("chunky").GetComponent<TextMeshProUGUI>();
+
+        orderCreatedText = orderOrganiser.Find("orderCreatedText").GetComponent<TextMeshProUGUI>();
+        orderCreatedText.gameObject.SetActive(false);
+
 
         Transform soup1Parent = soupOrganiser.transform.Find("soup1Name");
         Transform soup2Parent = soupOrganiser.transform.Find("soup2Name");
@@ -90,6 +109,15 @@ public class MenuManager : MonoBehaviour
     void Update()
     {
         MenuState();
+
+
+        // Making the "Order Created" text disappear after a while.
+        orderCreatedTextTimer += Time.deltaTime;
+
+        if (orderCreatedTextTimer >= 2)
+        {
+            orderCreatedText.gameObject.SetActive(false);
+        }
     }
 
     void MenuState()
@@ -156,8 +184,51 @@ public class MenuManager : MonoBehaviour
 
     public void CreateOrder()
     {
-        Order.CreateOrder(soupDropdown, colourDropdown, meatVegDropdown, spicyToggle, chunkyToggle);
+        OrderManager.AddOrder(Order.CreateOrder(soupDropdown, colourDropdown, meatVegDropdown, spicyToggle, chunkyToggle));
+        orderCreatedText.gameObject.SetActive(true);
+        orderCreatedTextTimer = 0;
+
+        DisplayCurrentOrder(soup, colour, meatVeg, spicy, chunky);
           
+    }
+
+    void DisplayCurrentOrder(TextMeshProUGUI soup, TextMeshProUGUI colour, TextMeshProUGUI meatVeg, TextMeshProUGUI spicy, TextMeshProUGUI chunky)
+    {
+        soup.text = OrderManager.currentOrders[0].mainSoup.soupName;
+        colour.text = OrderManager.currentOrders[0].colourPreference.name;
+
+        if (!OrderManager.currentOrders[0].noMeat && !OrderManager.currentOrders[0].noVeg)
+        {
+            meatVeg.text = "Meat and Veg allowed";
+        }
+        else if (OrderManager.currentOrders[0].noMeat && !OrderManager.currentOrders[0].noVeg)
+        {
+            meatVeg.text = "Meat not allowed";
+        }
+        else if (OrderManager.currentOrders[0].noVeg && !OrderManager.currentOrders[0].noMeat)
+        {
+            meatVeg.text = "Veg not allowed";
+        }
+
+        switch (OrderManager.currentOrders[0].isSpicy)
+        {
+            case true:
+                spicy.text = "Spicy";
+                break;
+            case false:
+                spicy.text = "No spice";
+                break;
+        }
+
+        switch (OrderManager.currentOrders[0].isChunky)
+        {
+            case true:
+                chunky.text = "Chunky";
+                break;
+            case false:
+                chunky.text = "No chunky";
+                break;
+        }
     }
 
     
