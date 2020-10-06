@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using TMPro;
 
 public enum CameraMode
 { 
@@ -15,16 +16,20 @@ public class MouseLook : MonoBehaviour
     public float mouseSensitivity = 100f;
     public float handControlSensitivity = 100f;
     public float handZDistance = 0.7f;
-    public float PickUpUIPos = 0.0f;
+    public float PickUpUIYPos = 0.0f;
+    public float ApplianceUIZPos = 3.0f;
+    public float ApplianceUIYPos = 5.0f;
     // ------------------------------------------ //
 
     // Inspector Variables //
     // ------------------------------------------ //
     public Transform playerBody;
     public Material itemSelectedMat;
-    public Transform testCube;
+    
+
     public Transform hand;
     public Canvas PickUpUI;
+    public Canvas ApplianceUI;
     // ------------------------------------------ //
 
 
@@ -33,10 +38,17 @@ public class MouseLook : MonoBehaviour
     Vector3 handPos;
     public CameraMode currentCameraMode = CameraMode.lookMode;
     public static Transform selectedItem;
-    public static Transform heldItem;
+    public static Transform selectedAppliance = null;
+    public static Transform heldItem = null;
     private Material defaultMat;
     float xRotation = 0.0f;
-    RaycastHit raycastHit;
+
+    Transform insertText = null;
+    Transform notHoldingText = null;
+
+    // Different raycasts //
+    RaycastHit raycastFromHand;
+    RaycastHit raycastFromScreen;
 
 
 
@@ -49,9 +61,12 @@ public class MouseLook : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        // Doing raycast from hand //
+        Physics.Raycast(hand.position, hand.forward * 10, out raycastFromHand);
+        Debug.DrawRay(gameObject.transform.position, gameObject.transform.forward * 5, Color.blue);
 
-        Physics.Raycast(hand.position, hand.forward * 10, out raycastHit);
-        Debug.DrawRay(hand.position, hand.forward * 10, Color.green);
+        // Doing raycast from screen //
+        Physics.Raycast(gameObject.transform.position, gameObject.transform.forward * 5, out raycastFromScreen);
 
         CameraState();
 
@@ -59,7 +74,7 @@ public class MouseLook : MonoBehaviour
         SelectObj();
         
         DisplayPickupUI();
-        
+        DisplayApplianceIU();
 
         if (Input.GetKeyDown(KeyCode.E) && !isHoldingItem && selectedItem)
         {
@@ -134,11 +149,11 @@ public class MouseLook : MonoBehaviour
     void SelectObj()
     {
         
-        
- 
-        if (IsLookingAtObj())
+        // Item selection stuff //
+        // -------------------------------------------------------- //   
+        if (IsLookingAtItem())
         {
-            selectedItem = raycastHit.transform;
+            selectedItem = raycastFromHand.transform;
             defaultMat = selectedItem.GetComponent<Renderer>().material;
             selectedItem.GetComponent<Renderer>().material = itemSelectedMat;
            
@@ -146,7 +161,7 @@ public class MouseLook : MonoBehaviour
 
         // If the player looks away from the item //
 
-        else if (raycastHit.transform != selectedItem || raycastHit.transform == heldItem)
+        else if (raycastFromHand.transform != selectedItem || raycastFromHand.transform == heldItem)
         {
             if (selectedItem != null)
             {
@@ -154,13 +169,26 @@ public class MouseLook : MonoBehaviour
             }
             selectedItem = null;
         }
-        
-        
+        // -------------------------------------------------------- //  
+
+        // Appliance selection stuff //
+        // -------------------------------------------------------- // 
+        if (IsLookingAtAppliance())
+        {
+            selectedAppliance = raycastFromScreen.transform;
+        }
+
+        //else if (raycastFromScreen.transform != selectedAppliance)
+        //{
+        //    selectedItem = null;
+        //}
+
+
     }
 
-    bool IsLookingAtObj()
+    bool IsLookingAtItem()
     {
-        if (raycastHit.transform != null && raycastHit.transform.CompareTag("Item") && selectedItem != raycastHit.transform && !isHoldingItem)
+        if (raycastFromHand.transform != null && raycastFromHand.transform.CompareTag("Item") && selectedItem != raycastFromHand.transform && !isHoldingItem)
         {
             return true;
         }
@@ -202,7 +230,7 @@ public class MouseLook : MonoBehaviour
             }
 
             Vector3 UIPos = selectedItem.position;
-            UIPos.y += PickUpUIPos;
+            UIPos.y += PickUpUIYPos;
             PickUpUI.transform.position = UIPos;
             PickUpUI.transform.LookAt(gameObject.transform);
 
@@ -210,6 +238,62 @@ public class MouseLook : MonoBehaviour
         else
         {
             PickUpUI.gameObject.SetActive(false);
+        }
+    }
+
+    bool IsLookingAtAppliance()
+    {
+        if (raycastFromScreen.transform != null && raycastFromScreen.transform.CompareTag("Appliance"))
+        {
+            return true;
+        }
+        return false;
+    }
+
+    void DisplayApplianceIU()
+    {
+        Vector3 applianceUIPos;
+        if (selectedAppliance)
+        {
+            if (insertText == null && notHoldingText == null)
+            {
+                notHoldingText = ApplianceUI.transform.Find("notHoldingText");
+                insertText = ApplianceUI.transform.Find("insertText");
+            }
+            if (selectedAppliance.parent != null)
+            {
+                applianceUIPos = selectedAppliance.parent.position;
+            }
+            else
+            {
+                applianceUIPos = selectedAppliance.position;
+            }
+
+            // Adjusting the position based on the inspector values //
+            applianceUIPos.y += ApplianceUIYPos;
+            applianceUIPos.z += ApplianceUIZPos;
+
+
+            // Applying new position and constantly making the UI face the player. //
+            ApplianceUI.transform.position = applianceUIPos;
+            ApplianceUI.transform.LookAt(gameObject.transform);
+
+          
+
+            if (IsLookingAtAppliance() && !isHoldingItem)
+            {
+                notHoldingText.gameObject.SetActive(true);
+            }
+            else if (IsLookingAtAppliance() && isHoldingItem)
+            {
+                insertText.gameObject.SetActive(true);
+                insertText.GetComponent<TextMeshProUGUI>().text = "INSERT " + heldItem.name + " [E]";
+            }
+            else
+            {
+                notHoldingText.gameObject.SetActive(false);
+                insertText.gameObject.SetActive(false);
+            }
         }
     }
 }

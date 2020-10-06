@@ -40,13 +40,18 @@ public class MenuManager : MonoBehaviour
     TextMeshProUGUI spicy;
     TextMeshProUGUI chunky;
 
-    // Held item UI stuff //
+    // Player UI stuff //
     TextMeshProUGUI heldItemText;
+    TextMeshProUGUI selectedItemText;
+    TextMeshProUGUI selectedApplianceText;
 
     // Start is called before the first frame update
     void Start()
     {
         heldItemText = debugUI.transform.Find("heldItem").GetComponent<TextMeshProUGUI>();
+        selectedItemText = debugUI.transform.Find("selectedItem").GetComponent<TextMeshProUGUI>();
+        selectedApplianceText = debugUI.transform.Find("selectedAppliance").GetComponent<TextMeshProUGUI>();
+
 
         Transform soupOrganiser = orderUI.transform.Find("SoupStuff");
         Transform orderOrganiser = orderUI.transform.Find("OrderCreationStuff");
@@ -123,8 +128,10 @@ public class MenuManager : MonoBehaviour
             orderCreatedText.gameObject.SetActive(false);
         }
 
-        // Display held item // 
+        // Display player UI stuff // 
         DisplayHeldItem();
+        DisplaySelectedAppliance();
+        DisplaySelectedItem();
     }
 
     void MenuState()
@@ -249,6 +256,30 @@ public class MenuManager : MonoBehaviour
         else
         {
             heldItemText.text = "None";
+        }
+    }
+
+    void DisplaySelectedItem()
+    {
+        if (MouseLook.selectedItem)
+        {
+            selectedItemText.text = MouseLook.selectedItem.name;
+        }
+        else
+        {
+            selectedItemText.text = "None";
+        }
+    }
+
+    void DisplaySelectedAppliance()
+    {
+        if (MouseLook.selectedAppliance)
+        {
+            selectedApplianceText.text = MouseLook.selectedAppliance.name;
+        }
+        else
+        {
+            selectedApplianceText.text = "None";
         }
     }
 
