@@ -32,7 +32,8 @@ public class MouseLook : MonoBehaviour
     bool isHoldingItem = false;
     Vector3 handPos;
     public CameraMode currentCameraMode = CameraMode.lookMode;
-    private Transform selectedObj;
+    public static Transform selectedItem;
+    public static Transform heldItem;
     private Material defaultMat;
     float xRotation = 0.0f;
     RaycastHit raycastHit;
@@ -51,36 +52,17 @@ public class MouseLook : MonoBehaviour
         CameraState();
         Debug.DrawRay(hand.position, hand.forward * 10, Color.green);
 
-
-
         SelectObj();
+        DisplayPickupUI();
+        
 
-        if (selectedObj)
+        if (Input.GetKeyDown(KeyCode.E) && !isHoldingItem && selectedItem)
         {
-            if (!isHoldingItem)
-            {
-                PickUpUI.gameObject.SetActive(true);
-            }
-            else
-            {
-                PickUpUI.gameObject.SetActive(false);
-            }
-            Vector3 UIPos = selectedObj.position;
-            UIPos.y += PickUpUIPos;
-            PickUpUI.transform.position = UIPos;
-            PickUpUI.transform.LookAt(gameObject.transform);
-            if (Input.GetKeyDown(KeyCode.E) && !isHoldingItem)
-            {
-                PickUpItem(selectedObj);
-            }
-            else if (Input.GetKeyDown(KeyCode.E) && isHoldingItem)
-            {
-                DropItem(selectedObj);
-            }
+            PickUpItem(selectedItem);
         }
-        else
+        else if (Input.GetKeyDown(KeyCode.E) && isHoldingItem)
         {
-            PickUpUI.gameObject.SetActive(false);
+            DropItem();
         }
 
     }
@@ -147,36 +129,78 @@ public class MouseLook : MonoBehaviour
     void SelectObj()
     {
         Physics.Raycast(hand.position, hand.forward * 10, out raycastHit);
-        if (raycastHit.transform != null && raycastHit.transform.CompareTag("Item") && selectedObj != raycastHit.transform)
+        if (raycastHit.transform != null && raycastHit.transform.CompareTag("Item") && selectedItem != raycastHit.transform)
         {
-            selectedObj = raycastHit.transform;
-            defaultMat = selectedObj.GetComponent<Renderer>().material;
-            selectedObj.GetComponent<Renderer>().material = selectedMat;
+            selectedItem = raycastHit.transform;
+            defaultMat = selectedItem.GetComponent<Renderer>().material;
+            selectedItem.GetComponent<Renderer>().material = selectedMat;
             Debug.Log("Looking at obj...");
 
             testCube.gameObject.GetComponent<Renderer>().material = defaultMat;
         }
-        else if (raycastHit.transform != selectedObj)
+        else if (raycastHit.transform != selectedItem)
         {
             Debug.Log("Not looking at obj...");
-            if (selectedObj != null)
+            if (selectedItem != null)
             {
-                selectedObj.GetComponent<Renderer>().material = defaultMat;
+                selectedItem.GetComponent<Renderer>().material = defaultMat;
             }
-            selectedObj = null;
+            selectedItem = null;
         }
+    }
+
+    bool IsLookingAtObj()
+    {
+        if (raycastHit.transform != null && raycastHit.transform.CompareTag("Item") && selectedItem != raycastHit.transform)
+        {
+            return true;
+        }
+        return false;
     }
 
     void PickUpItem(Transform itemToPickUp)
     {
         isHoldingItem = true;
+        heldItem = itemToPickUp;
         itemToPickUp.SetParent(hand);
         itemToPickUp.localPosition = new Vector3(0, 0, -5);
+
+        itemToPickUp.GetComponent<Rigidbody>().useGravity = false;
+        itemToPickUp.GetComponent<Rigidbody>().isKinematic = true;
     }
-    void DropItem(Transform itemToDrop)
+    void DropItem()
     {
         isHoldingItem = false;
-        itemToDrop.parent = null;
 
+        heldItem.GetComponent<Rigidbody>().useGravity = true;
+        heldItem.GetComponent<Rigidbody>().isKinematic = false;
+
+        heldItem.parent = null;
+        heldItem = null;
+    }
+
+    void DisplayPickupUI()
+    {
+        if (selectedItem)
+        {
+            if (!isHoldingItem)
+            {
+                PickUpUI.gameObject.SetActive(true);
+            }
+            else
+            {
+                PickUpUI.gameObject.SetActive(false);
+            }
+
+            Vector3 UIPos = selectedItem.position;
+            UIPos.y += PickUpUIPos;
+            PickUpUI.transform.position = UIPos;
+            PickUpUI.transform.LookAt(gameObject.transform);
+
+        }
+        else
+        {
+            PickUpUI.gameObject.SetActive(false);
+        }
     }
 }

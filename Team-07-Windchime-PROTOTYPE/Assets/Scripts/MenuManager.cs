@@ -21,7 +21,7 @@ public class MenuManager : MonoBehaviour
 
     public Canvas orderUI;
     public Canvas pauseUI;
-
+    public Canvas debugUI;
     
     TMP_Dropdown soupDropdown;
     TMP_Dropdown colourDropdown;
@@ -40,9 +40,13 @@ public class MenuManager : MonoBehaviour
     TextMeshProUGUI spicy;
     TextMeshProUGUI chunky;
 
+    // Held item UI stuff //
+    TextMeshProUGUI heldItemText;
+
     // Start is called before the first frame update
     void Start()
     {
+        heldItemText = debugUI.transform.Find("heldItem").GetComponent<TextMeshProUGUI>();
 
         Transform soupOrganiser = orderUI.transform.Find("SoupStuff");
         Transform orderOrganiser = orderUI.transform.Find("OrderCreationStuff");
@@ -118,6 +122,9 @@ public class MenuManager : MonoBehaviour
         {
             orderCreatedText.gameObject.SetActive(false);
         }
+
+        // Display held item // 
+        DisplayHeldItem();
     }
 
     void MenuState()
@@ -132,6 +139,7 @@ public class MenuManager : MonoBehaviour
                 {
                     currentState = global::MenuState.none;
                     playerCamera.GetComponent<MouseLook>().currentCameraMode = CameraMode.lookMode;
+                    Cursor.lockState = CursorLockMode.Locked;
                 }
                 break;
             case global::MenuState.orderMenu:
@@ -142,6 +150,7 @@ public class MenuManager : MonoBehaviour
                 {
                     currentState = global::MenuState.none;
                     playerCamera.GetComponent<MouseLook>().currentCameraMode = CameraMode.lookMode;
+                    Cursor.lockState = CursorLockMode.Locked;
                 }
                 break;
             case global::MenuState.none:        
@@ -228,6 +237,18 @@ public class MenuManager : MonoBehaviour
             case false:
                 chunky.text = "No chunky";
                 break;
+        }
+    }
+
+    void DisplayHeldItem()
+    {
+        if (MouseLook.heldItem)
+        {
+            heldItemText.text = MouseLook.heldItem.name;
+        }
+        else
+        {
+            heldItemText.text = "None";
         }
     }
 

@@ -257,10 +257,11 @@ MonoBehaviour:
   handZDistance: 0.7
   PickUpUIPos: 0.6
   playerBody: {fileID: 1806785837140528374}
-  selectedMat: {fileID: 2100000, guid: b10647d4d17693148a4310e3ae96a8e9, type: 2}
+  selectedMat: {fileID: 2100000, guid: ee9d687410872e54094bbc3a5d5da42d, type: 2}
   testCube: {fileID: 0}
   hand: {fileID: 1806785835728641961}
   PickUpUI: {fileID: 0}
+  currentCameraMode: 0
 --- !u!1 &1806785837140528138
 GameObject:
   m_ObjectHideFlags: 0
