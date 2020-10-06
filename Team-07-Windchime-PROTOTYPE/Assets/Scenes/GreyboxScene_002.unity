@@ -13097,7 +13097,12 @@ PrefabInstance:
     - target: {fileID: 1806785835890491554, guid: 4f9cce82dda24db41bc45f5a8e31e82f,
         type: 3}
       propertyPath: ApplianceUIZPos
-      value: -1.45
+      value: -1.8
+      objectReference: {fileID: 0}
+    - target: {fileID: 1806785835890491554, guid: 4f9cce82dda24db41bc45f5a8e31e82f,
+        type: 3}
+      propertyPath: PickUpUIYPos
+      value: 0.75
       objectReference: {fileID: 0}
     - target: {fileID: 1806785837140528138, guid: 4f9cce82dda24db41bc45f5a8e31e82f,
         type: 3}

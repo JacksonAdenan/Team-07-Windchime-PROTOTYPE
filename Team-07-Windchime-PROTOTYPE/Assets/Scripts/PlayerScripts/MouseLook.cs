@@ -283,10 +283,12 @@ public class MouseLook : MonoBehaviour
             if (IsLookingAtAppliance() && !isHoldingItem)
             {
                 notHoldingText.gameObject.SetActive(true);
+                insertText.gameObject.SetActive(false);
             }
             else if (IsLookingAtAppliance() && isHoldingItem)
             {
                 insertText.gameObject.SetActive(true);
+                notHoldingText.gameObject.SetActive(false);
                 insertText.GetComponent<TextMeshProUGUI>().text = "INSERT " + heldItem.name + " [E]";
             }
             else
