@@ -11871,7 +11871,7 @@ PrefabInstance:
     - target: {fileID: 4436428995676951882, guid: 1896973118358af4c8b9918028b20383,
         type: 3}
       propertyPath: soupName
-      value: testSoup1
+      value: apple pie
       objectReference: {fileID: 0}
     - target: {fileID: 4436428995676951882, guid: 1896973118358af4c8b9918028b20383,
         type: 3}
@@ -11894,7 +11894,7 @@ PrefabInstance:
     - target: {fileID: 5769752847441257449, guid: 1896973118358af4c8b9918028b20383,
         type: 3}
       propertyPath: soupName
-      value: testSoup2
+      value: minecraft cake
       objectReference: {fileID: 0}
     - target: {fileID: 5769752847441257449, guid: 1896973118358af4c8b9918028b20383,
         type: 3}
@@ -11917,7 +11917,7 @@ PrefabInstance:
     - target: {fileID: 7305714904546113174, guid: 1896973118358af4c8b9918028b20383,
         type: 3}
       propertyPath: soupName
-      value: testSoup3
+      value: pizza
       objectReference: {fileID: 0}
     - target: {fileID: 7305714904546113174, guid: 1896973118358af4c8b9918028b20383,
         type: 3}

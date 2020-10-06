@@ -4,6 +4,11 @@ using UnityEngine;
 
 public class Colour
 {
+    private string name;
+    public Colour(string colourName)
+    {
+        name = colourName;
+    }
     // Start is called before the first frame update
     void Start()
     {

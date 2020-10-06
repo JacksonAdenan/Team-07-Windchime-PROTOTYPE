@@ -22,7 +22,11 @@ public class MenuManager : MonoBehaviour
     public Canvas orderUI;
     public Canvas pauseUI;
 
+    
     TMP_Dropdown soupDropdown;
+    TMP_Dropdown colourDropdown;
+    TMP_Dropdown meatVegDropdown;
+
     Toggle spicyToggle;
     Toggle chunkyToggle;
 
@@ -42,10 +46,10 @@ public class MenuManager : MonoBehaviour
         soupDropdown = orderOrganiser.Find("soupDropdown").GetComponent<TMP_Dropdown>();
         TextMeshProUGUI soupDropdownLabel = soupDropdown.transform.Find("Label").GetComponent<TextMeshProUGUI>();
 
-        TMP_Dropdown colourDropdown = orderOrganiser.Find("colourDropdown").GetComponent<TMP_Dropdown>();
+        colourDropdown = orderOrganiser.Find("colourDropdown").GetComponent<TMP_Dropdown>();
         TextMeshProUGUI colourDropdownLabel = colourDropdown.transform.Find("Label").GetComponent<TextMeshProUGUI>();
 
-        TMP_Dropdown meatVegDropdown = orderOrganiser.Find("meatVegDropdown").GetComponent<TMP_Dropdown>();
+        meatVegDropdown = orderOrganiser.Find("meatVegDropdown").GetComponent<TMP_Dropdown>();
         TextMeshProUGUI meatVegDropdownLabel = meatVegDropdown.transform.Find("Label").GetComponent<TextMeshProUGUI>();
 
         spicyToggle = orderOrganiser.Find("spicyToggle").GetComponent<Toggle>();
@@ -152,27 +156,14 @@ public class MenuManager : MonoBehaviour
 
     public void CreateOrder()
     {
-        Soup mainRecipe = GetSoupFromDropdown(soupDropdown.value);
-        bool isSpicy = spicyToggle.isOn;
-        bool isChunky = chunkyToggle.isOn;
-
-        Debug.Log(mainRecipe.soupName);
-        Debug.Log(isSpicy.ToString());
-        Debug.Log(isChunky.ToString());
-
+        Order.CreateOrder(soupDropdown, colourDropdown, meatVegDropdown, spicyToggle, chunkyToggle);
+          
     }
 
-    Soup GetSoupFromDropdown(int selected)
-    {
-        for (int i = 0; i < CookingManager.allSoups.Count; i++)
-        {
-            if (soupDropdown.options[selected].text == CookingManager.allSoups[i].soupName)
-            {
-                return CookingManager.allSoups[i];
-            }
-        }
-        return null;
-    }
+    
+
+
+
 
 }
 
