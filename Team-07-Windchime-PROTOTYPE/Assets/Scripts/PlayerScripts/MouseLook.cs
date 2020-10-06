@@ -66,7 +66,7 @@ public class MouseLook : MonoBehaviour
         Debug.DrawRay(gameObject.transform.position, gameObject.transform.forward * 5, Color.blue);
 
         // Doing raycast from screen //
-        Physics.Raycast(gameObject.transform.position, gameObject.transform.forward * 5, out raycastFromScreen);
+        Physics.Raycast(gameObject.transform.position, gameObject.transform.forward * 5, out raycastFromScreen, 5);
 
         CameraState();
 
@@ -178,10 +178,10 @@ public class MouseLook : MonoBehaviour
             selectedAppliance = raycastFromScreen.transform;
         }
 
-        //else if (raycastFromScreen.transform != selectedAppliance)
-        //{
-        //    selectedItem = null;
-        //}
+        else if (raycastFromScreen.transform != selectedAppliance)
+        {
+            selectedAppliance = null;
+        }
 
 
     }
@@ -253,13 +253,14 @@ public class MouseLook : MonoBehaviour
     void DisplayApplianceIU()
     {
         Vector3 applianceUIPos;
+        if (insertText == null && notHoldingText == null)
+        {
+            notHoldingText = ApplianceUI.transform.Find("notHoldingText");
+            insertText = ApplianceUI.transform.Find("insertText");
+        }
         if (selectedAppliance)
         {
-            if (insertText == null && notHoldingText == null)
-            {
-                notHoldingText = ApplianceUI.transform.Find("notHoldingText");
-                insertText = ApplianceUI.transform.Find("insertText");
-            }
+            
             if (selectedAppliance.parent != null)
             {
                 applianceUIPos = selectedAppliance.parent.position;
@@ -278,7 +279,7 @@ public class MouseLook : MonoBehaviour
             ApplianceUI.transform.position = applianceUIPos;
             ApplianceUI.transform.LookAt(gameObject.transform);
 
-          
+
 
             if (IsLookingAtAppliance() && !isHoldingItem)
             {
@@ -296,6 +297,11 @@ public class MouseLook : MonoBehaviour
                 notHoldingText.gameObject.SetActive(false);
                 insertText.gameObject.SetActive(false);
             }
+        }
+        else 
+        {
+            notHoldingText.gameObject.SetActive(false);
+            insertText.gameObject.SetActive(false);
         }
     }
 }
