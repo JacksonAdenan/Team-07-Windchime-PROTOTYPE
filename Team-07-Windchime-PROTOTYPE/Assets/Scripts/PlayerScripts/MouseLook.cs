@@ -21,7 +21,7 @@ public class MouseLook : MonoBehaviour
     // Inspector Variables //
     // ------------------------------------------ //
     public Transform playerBody;
-    public Material selectedMat;
+    public Material itemSelectedMat;
     public Transform testCube;
     public Transform hand;
     public Canvas PickUpUI;
@@ -49,10 +49,15 @@ public class MouseLook : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        CameraState();
+
+        Physics.Raycast(hand.position, hand.forward * 10, out raycastHit);
         Debug.DrawRay(hand.position, hand.forward * 10, Color.green);
 
+        CameraState();
+
+
         SelectObj();
+        
         DisplayPickupUI();
         
 
@@ -128,30 +133,34 @@ public class MouseLook : MonoBehaviour
 
     void SelectObj()
     {
-        Physics.Raycast(hand.position, hand.forward * 10, out raycastHit);
-        if (raycastHit.transform != null && raycastHit.transform.CompareTag("Item") && selectedItem != raycastHit.transform)
+        
+        
+ 
+        if (IsLookingAtObj())
         {
             selectedItem = raycastHit.transform;
             defaultMat = selectedItem.GetComponent<Renderer>().material;
-            selectedItem.GetComponent<Renderer>().material = selectedMat;
-            Debug.Log("Looking at obj...");
-
-            testCube.gameObject.GetComponent<Renderer>().material = defaultMat;
+            selectedItem.GetComponent<Renderer>().material = itemSelectedMat;
+           
         }
-        else if (raycastHit.transform != selectedItem)
+
+        // If the player looks away from the item //
+
+        else if (raycastHit.transform != selectedItem || raycastHit.transform == heldItem)
         {
-            Debug.Log("Not looking at obj...");
             if (selectedItem != null)
             {
                 selectedItem.GetComponent<Renderer>().material = defaultMat;
             }
             selectedItem = null;
         }
+        
+        
     }
 
     bool IsLookingAtObj()
     {
-        if (raycastHit.transform != null && raycastHit.transform.CompareTag("Item") && selectedItem != raycastHit.transform)
+        if (raycastHit.transform != null && raycastHit.transform.CompareTag("Item") && selectedItem != raycastHit.transform && !isHoldingItem)
         {
             return true;
         }
