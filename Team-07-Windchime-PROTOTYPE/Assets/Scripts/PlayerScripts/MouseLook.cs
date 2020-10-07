@@ -9,6 +9,13 @@ public enum CameraMode
     handMode,
     pauseMode
 }
+
+public enum InteractMode
+{ 
+    holdingItem,
+    lookingAtItem,
+    appliance
+}
 public class MouseLook : MonoBehaviour
 {
     // Adjustable Values //
@@ -304,4 +311,15 @@ public class MouseLook : MonoBehaviour
             insertText.gameObject.SetActive(false);
         }
     }
+
+    // Appliance interactions //
+
+    void InsertItem()
+    { }
+    void RemoveItem()
+    { }
+
+    void ActivateAppliance()
+    { }
+
 }

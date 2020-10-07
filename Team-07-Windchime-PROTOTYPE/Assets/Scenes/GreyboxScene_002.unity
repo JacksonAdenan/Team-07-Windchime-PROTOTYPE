@@ -11694,6 +11694,21 @@ PrefabInstance:
       propertyPath: m_Name
       value: AllSoups
       objectReference: {fileID: 0}
+    - target: {fileID: 4436428995676951882, guid: 1896973118358af4c8b9918028b20383,
+        type: 3}
+      propertyPath: restrictedIngredient
+      value: apple
+      objectReference: {fileID: 0}
+    - target: {fileID: 4436428995676951882, guid: 1896973118358af4c8b9918028b20383,
+        type: 3}
+      propertyPath: spicyValue
+      value: 5
+      objectReference: {fileID: 0}
+    - target: {fileID: 4436428995676951882, guid: 1896973118358af4c8b9918028b20383,
+        type: 3}
+      propertyPath: chunkyValue
+      value: 6
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 1896973118358af4c8b9918028b20383, type: 3}
 --- !u!1001 &720403569047700913
