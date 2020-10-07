@@ -45,6 +45,11 @@ public class MenuManager : MonoBehaviour
     TextMeshProUGUI selectedItemText;
     TextMeshProUGUI selectedApplianceText;
 
+    // Seperators for ease of access //
+    Transform soupOrganiser;
+    Transform orderOrganiser;
+    Transform currentOrderOrganiser;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -52,10 +57,10 @@ public class MenuManager : MonoBehaviour
         selectedItemText = debugUI.transform.Find("selectedItem").GetComponent<TextMeshProUGUI>();
         selectedApplianceText = debugUI.transform.Find("selectedAppliance").GetComponent<TextMeshProUGUI>();
 
-
-        Transform soupOrganiser = orderUI.transform.Find("SoupStuff");
-        Transform orderOrganiser = orderUI.transform.Find("OrderCreationStuff");
-        Transform currentOrderOrganiser = orderUI.transform.Find("OrderList");
+        // Setting the "seperators" to make it easier to find children under the seperator. //
+        soupOrganiser = orderUI.transform.Find("SoupStuff");
+        orderOrganiser = orderUI.transform.Find("OrderCreationStuff");
+        currentOrderOrganiser = orderUI.transform.Find("OrderList");
 
         soup = currentOrderOrganiser.Find("soupName").GetComponent<TextMeshProUGUI>();
         colour = currentOrderOrganiser.Find("colourPreference").GetComponent<TextMeshProUGUI>();
@@ -67,9 +72,7 @@ public class MenuManager : MonoBehaviour
         orderCreatedText.gameObject.SetActive(false);
 
 
-        Transform soup1Parent = soupOrganiser.transform.Find("soup1Name");
-        Transform soup2Parent = soupOrganiser.transform.Find("soup2Name");
-        Transform soup3Parent = soupOrganiser.transform.Find("soup3Name");
+        
 
         soupDropdown = orderOrganiser.Find("soupDropdown").GetComponent<TMP_Dropdown>();
         TextMeshProUGUI soupDropdownLabel = soupDropdown.transform.Find("Label").GetComponent<TextMeshProUGUI>();
@@ -83,20 +86,7 @@ public class MenuManager : MonoBehaviour
         spicyToggle = orderOrganiser.Find("spicyToggle").GetComponent<Toggle>();
         chunkyToggle = orderOrganiser.Find("chunkyToggle").GetComponent<Toggle>();
 
-        soupOrganiser.transform.Find("soup1Name").GetComponent<TextMeshProUGUI>().text = CookingManager.allSoups[0].soupName;
-        soup1Parent.transform.Find("core1").GetComponent<TextMeshProUGUI>().text = CookingManager.allSoups[0].core1.name.ToString();
-        soup1Parent.transform.Find("core2").GetComponent<TextMeshProUGUI>().text = CookingManager.allSoups[0].core2.name.ToString();
-        soup1Parent.transform.Find("core3").GetComponent<TextMeshProUGUI>().text = CookingManager.allSoups[0].core3.name.ToString();
         
-        soupOrganiser.transform.Find("soup2Name").GetComponent<TextMeshProUGUI>().text = CookingManager.allSoups[1].soupName;
-        soup2Parent.transform.Find("core1").GetComponent<TextMeshProUGUI>().text = CookingManager.allSoups[1].core1.name.ToString();
-        soup2Parent.transform.Find("core2").GetComponent<TextMeshProUGUI>().text = CookingManager.allSoups[1].core2.name.ToString();
-        soup2Parent.transform.Find("core3").GetComponent<TextMeshProUGUI>().text = CookingManager.allSoups[1].core3.name.ToString();
-        
-        soupOrganiser.transform.Find("soup3Name").GetComponent<TextMeshProUGUI>().text = CookingManager.allSoups[2].soupName;
-        soup3Parent.transform.Find("core1").GetComponent<TextMeshProUGUI>().text = CookingManager.allSoups[2].core1.name.ToString();
-        soup3Parent.transform.Find("core2").GetComponent<TextMeshProUGUI>().text = CookingManager.allSoups[2].core2.name.ToString();
-        soup3Parent.transform.Find("core3").GetComponent<TextMeshProUGUI>().text = CookingManager.allSoups[2].core3.name.ToString();
 
         soupDropdown.options.Clear();
         soupDropdownLabel.text = "Soup Recipe";
@@ -127,6 +117,9 @@ public class MenuManager : MonoBehaviour
         {
             orderCreatedText.gameObject.SetActive(false);
         }
+
+        // Displaying available soups //
+        DisplayAvailableSoups(soupOrganiser);
 
         // Display player UI stuff // 
         DisplayHeldItem();
@@ -281,6 +274,31 @@ public class MenuManager : MonoBehaviour
         {
             selectedApplianceText.text = "None";
         }
+    }
+
+    void DisplayAvailableSoups(Transform parentOfUI)
+    {
+        // Setting all the soup titles. These will be stored to make finding their children easier. //
+        Transform soup1Parent = parentOfUI.transform.Find("soup1Name");
+        Transform soup2Parent = parentOfUI.transform.Find("soup2Name");
+        Transform soup3Parent = parentOfUI.transform.Find("soup3Name");
+
+        soup1Parent.GetComponent<TextMeshProUGUI>().text = CookingManager.allSoups[0].soupName;
+        soup2Parent.GetComponent<TextMeshProUGUI>().text = CookingManager.allSoups[1].soupName;
+        soup3Parent.GetComponent<TextMeshProUGUI>().text = CookingManager.allSoups[2].soupName;
+
+
+        soup1Parent.transform.Find("spicyValue").GetComponent<TextMeshProUGUI>().text = CookingManager.allSoups[0].spicyValue.ToString();
+        soup1Parent.transform.Find("chunkyValue").GetComponent<TextMeshProUGUI>().text = CookingManager.allSoups[0].chunkyValue.ToString();
+        soup1Parent.transform.Find("restrictedIngredient").GetComponent<TextMeshProUGUI>().text = "Restricted: " + CookingManager.allSoups[0].restrictedIngredient.name;
+
+        soup2Parent.transform.Find("spicyValue").GetComponent<TextMeshProUGUI>().text = CookingManager.allSoups[1].spicyValue.ToString();
+        soup2Parent.transform.Find("chunkyValue").GetComponent<TextMeshProUGUI>().text = CookingManager.allSoups[1].chunkyValue.ToString();
+        soup2Parent.transform.Find("restrictedIngredient").GetComponent<TextMeshProUGUI>().text = "Restricted: " + CookingManager.allSoups[1].restrictedIngredient.name;
+
+        soup3Parent.transform.Find("spicyValue").GetComponent<TextMeshProUGUI>().text = CookingManager.allSoups[2].spicyValue.ToString();
+        soup3Parent.transform.Find("chunkyValue").GetComponent<TextMeshProUGUI>().text = CookingManager.allSoups[2].chunkyValue.ToString();
+        soup3Parent.transform.Find("restrictedIngredient").GetComponent<TextMeshProUGUI>().text = "Restricted: " + CookingManager.allSoups[2].restrictedIngredient.name;
     }
 
     

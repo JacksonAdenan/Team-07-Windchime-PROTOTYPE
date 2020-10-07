@@ -5,17 +5,22 @@ using UnityEngine;
 public class Soup
 {
     public string soupName;
-    public Ingridient core1;
-    public Ingridient core2;
-    public Ingridient core3;
+    public float spicyValue;
+    public float chunkyValue;
+    public Ingridient restrictedIngredient;
+    
+    public Colour colour;
+
+
+
+    // Remove these at some point. //
     public bool isSpicy;
     public bool isChunky;
-    public Colour colour;
-    public Soup(string name, Ingridient core1, Ingridient core2, Ingridient core3)
+    public Soup(string name, float spicyValue, float chunkyValue, Ingridient restrictedIngredient)
     {
         soupName = name;
-        this.core1 = core1;
-        this.core2 = core2;
-        this.core3 = core3;
+        this.spicyValue = spicyValue;
+        this.chunkyValue = chunkyValue;
+        this.restrictedIngredient = restrictedIngredient;
     }
 }

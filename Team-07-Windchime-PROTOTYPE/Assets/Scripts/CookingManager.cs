@@ -45,20 +45,20 @@ public class CookingManager : MonoBehaviour
     Soup CreateSoup(Transform soupFromScene)
     {
         SoupCreator soupsData = soupFromScene.GetComponent<SoupCreator>();
-        Ingridient core1 = ConvertTransformToIngridient(soupsData.core1);
-        Ingridient core2 = ConvertTransformToIngridient(soupsData.core2);
-        Ingridient core3 = ConvertTransformToIngridient(soupsData.core3);
+        Ingridient restrictedIngredient = ConvertTextToIngredient(soupsData.restrictedIngredient);
+        float spicyValue = soupsData.spicyValue;
+        float chunkyValue = soupsData.chunkyValue;
 
-        Soup newSoup = new Soup(soupsData.soupName, core1, core2, core3);
+        Soup newSoup = new Soup(soupsData.soupName, spicyValue, chunkyValue, restrictedIngredient);
         return newSoup;
 
     }
 
-    Ingridient ConvertTransformToIngridient(Transform transformToConvert)
+    Ingridient ConvertTextToIngredient(string textToConvert)
     {
         for (int i = 0; i < allIngridients.Count; i++)
         {
-            if (allIngridients[i].name == transformToConvert.name)
+            if (allIngridients[i].name == textToConvert)
             {
                 return allIngridients[i]; 
             }

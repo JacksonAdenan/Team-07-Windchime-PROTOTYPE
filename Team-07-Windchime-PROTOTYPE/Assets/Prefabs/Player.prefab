@@ -255,12 +255,14 @@ MonoBehaviour:
   mouseSensitivity: 100
   handControlSensitivity: 300
   handZDistance: 0.7
-  PickUpUIPos: 0.6
+  PickUpUIYPos: 0.75
+  ApplianceUIZPos: -1.8
+  ApplianceUIYPos: 0.13
   playerBody: {fileID: 1806785837140528374}
-  selectedMat: {fileID: 2100000, guid: ee9d687410872e54094bbc3a5d5da42d, type: 2}
-  testCube: {fileID: 0}
+  itemSelectedMat: {fileID: 2100000, guid: ee9d687410872e54094bbc3a5d5da42d, type: 2}
   hand: {fileID: 1806785835728641961}
   PickUpUI: {fileID: 0}
+  ApplianceUI: {fileID: 0}
   currentCameraMode: 0
 --- !u!1 &1806785837140528138
 GameObject:

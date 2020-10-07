@@ -5,9 +5,9 @@ using UnityEngine;
 public class SoupCreator : MonoBehaviour
 {
     public string soupName;
-    public Transform core1;
-    public Transform core2;
-    public Transform core3;
+    public float spicyValue;
+    public float chunkyValue;
+    public string restrictedIngredient;
     // Start is called before the first frame update
     void Start()
     {

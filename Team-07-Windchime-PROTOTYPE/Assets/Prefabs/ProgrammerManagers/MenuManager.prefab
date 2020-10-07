@@ -46,3 +46,4 @@ MonoBehaviour:
   playerCamera: {fileID: 0}
   orderUI: {fileID: 0}
   pauseUI: {fileID: 0}
+  debugUI: {fileID: 0}
