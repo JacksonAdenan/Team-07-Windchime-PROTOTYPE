@@ -11112,6 +11112,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: Monitor
       objectReference: {fileID: 0}
+    - target: {fileID: 4830885902010001090, guid: 2fd0354172d6abb43b3ecd35561a2e8a,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 4830885902010001091, guid: 2fd0354172d6abb43b3ecd35561a2e8a,
         type: 3}
       propertyPath: m_Mesh
@@ -12921,6 +12926,11 @@ PrefabInstance:
       propertyPath: ApplianceUI
       value: 
       objectReference: {fileID: 1057164451}
+    - target: {fileID: 6999435600160748223, guid: 4555a5c923190204593b33d328f2b91a,
+        type: 3}
+      propertyPath: tempThrowForce
+      value: 8
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 4555a5c923190204593b33d328f2b91a, type: 3}
 --- !u!1001 &7328243770148797205

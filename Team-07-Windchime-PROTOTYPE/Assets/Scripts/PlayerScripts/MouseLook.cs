@@ -35,6 +35,8 @@ public class MouseLook : MonoBehaviour
     public float heldItemPosY = 0;
     public float heldItemPosZ = 0;
 
+    public float tempThrowForce = 0;
+
     // ------------------------------------------ //
 
     // Inspector Variables //
@@ -109,6 +111,10 @@ public class MouseLook : MonoBehaviour
         else if (Input.GetKeyDown(KeyCode.E) && isHoldingItem)
         {
             DropItem();
+        }
+        else if (Input.GetKeyDown(KeyCode.F) && isHoldingItem)
+        {
+            ThrowItem();
         }
 
     }
@@ -294,6 +300,19 @@ public class MouseLook : MonoBehaviour
 
         heldItem.GetComponent<Rigidbody>().useGravity = true;
         heldItem.GetComponent<Rigidbody>().isKinematic = false;
+
+        heldItem.parent = null;
+        heldItem = null;
+    }
+
+    void ThrowItem()
+    {
+        isHoldingItem = false;
+
+        heldItem.GetComponent<Rigidbody>().useGravity = true;
+        heldItem.GetComponent<Rigidbody>().isKinematic = false;
+
+        heldItem.GetComponent<Rigidbody>().AddForce(-hand.forward * tempThrowForce, ForceMode.Impulse);
 
         heldItem.parent = null;
         heldItem = null;
