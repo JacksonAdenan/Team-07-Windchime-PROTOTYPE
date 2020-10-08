@@ -23,6 +23,10 @@ public class MouseLook : MonoBehaviour
     public float mouseSensitivity = 100f;
     public float handControlSensitivity = 100f;
     public float handZDistance = 0.7f;
+    public float handYCeilingLimit = 0.0f;
+    public float handYFloorLimit = 0.0f;
+    public float handXLeftLimit = 0.0f;
+    public float handXRightLimit = 0.0f;
     public float PickUpUIYPos = 0.0f;
     public float ApplianceUIZPos = 3.0f;
     public float ApplianceUIYPos = 5.0f;
@@ -63,6 +67,9 @@ public class MouseLook : MonoBehaviour
     void Start()
     {
         Cursor.lockState = CursorLockMode.Locked;
+
+
+        
     }
 
     // Update is called once per frame
@@ -142,9 +149,12 @@ public class MouseLook : MonoBehaviour
         hand.transform.position += handMovement * Time.deltaTime;
 
         handPos = hand.transform.localPosition;
+        
         handPos.z = Mathf.Clamp(handPos.z, handZDistance, handZDistance);
-        handPos.y = Mathf.Clamp(handPos.y, -0.3f, 0.3f);
-        handPos.x = Mathf.Clamp(handPos.x, -0.5f, 0.5f);
+        handPos.y = Mathf.Clamp(handPos.y, handYFloorLimit, handYCeilingLimit);
+        handPos.x = Mathf.Clamp(handPos.x, handXLeftLimit, handXRightLimit);
+
+
         hand.transform.localPosition = handPos;
     }
 
