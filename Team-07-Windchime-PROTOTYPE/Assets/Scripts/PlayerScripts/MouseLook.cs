@@ -30,6 +30,11 @@ public class MouseLook : MonoBehaviour
     public float PickUpUIYPos = 0.0f;
     public float ApplianceUIZPos = 3.0f;
     public float ApplianceUIYPos = 5.0f;
+    public float handCollisionRadius = 0;
+    public float heldItemPosX = 0;
+    public float heldItemPosY = 0;
+    public float heldItemPosZ = 0;
+
     // ------------------------------------------ //
 
     // Inspector Variables //
@@ -39,6 +44,8 @@ public class MouseLook : MonoBehaviour
     
 
     public Transform hand;
+    public Transform collisionSphere;
+
     public Canvas PickUpUI;
     public Canvas ApplianceUI;
     // ------------------------------------------ //
@@ -60,7 +67,7 @@ public class MouseLook : MonoBehaviour
     // Different raycasts //
     RaycastHit raycastFromHand;
     RaycastHit raycastFromScreen;
-
+    Collider[] collisions;
 
 
     // Start is called before the first frame update
@@ -82,13 +89,18 @@ public class MouseLook : MonoBehaviour
         // Doing raycast from screen //
         Physics.Raycast(gameObject.transform.position, gameObject.transform.forward * 5, out raycastFromScreen, 5);
 
+        // Doing sphere check //
+        collisions = Physics.OverlapSphere(collisionSphere.position, handCollisionRadius);
+
         CameraState();
 
 
-        SelectObj();
+        //SelectObj();
         
         DisplayPickupUI();
         DisplayApplianceIU();
+
+        NewSelectObj();
 
         if (Input.GetKeyDown(KeyCode.E) && !isHoldingItem && selectedItem)
         {
@@ -106,14 +118,14 @@ public class MouseLook : MonoBehaviour
         {
             case CameraMode.lookMode:
                 CameraLook();
-                if (Input.GetMouseButtonDown(1))
+                if (Input.GetMouseButton(1))
                 {
                     currentCameraMode = CameraMode.handMode;
                 }
                 break;
             case CameraMode.handMode:
                 CameraHandControl();
-                if (Input.GetMouseButtonDown(1))
+                if (Input.GetMouseButtonUp(1))
                 {
                     currentCameraMode = CameraMode.lookMode;
                 }
@@ -163,6 +175,19 @@ public class MouseLook : MonoBehaviour
         
     }
 
+    void SetSelectedItem(Transform itemToSelect)
+    {
+        selectedItem = itemToSelect;
+        defaultMat = selectedItem.GetComponent<Renderer>().material;
+        selectedItem.GetComponent<Renderer>().material = itemSelectedMat;
+    }
+
+    void RemoveSelectedItem()
+    {
+        selectedItem.GetComponent<Renderer>().material = defaultMat;
+        selectedItem = null;
+    }
+
     void SelectObj()
     {
         
@@ -203,6 +228,47 @@ public class MouseLook : MonoBehaviour
 
     }
 
+    void NewSelectObj()
+    {
+
+        if (NewIsLookingAtItem())
+        {
+            selectedItem = NewIsLookingAtItem();
+
+            // This if statement is a cheap fix for a badly written overall system... FIX IT ONE DAY //
+            if (!defaultMat)
+            { 
+                defaultMat = selectedItem.GetComponent<Renderer>().material;
+            }
+            selectedItem.GetComponent<Renderer>().material = itemSelectedMat;
+        }
+        
+
+        else
+        {
+            if (selectedItem != null)
+            {
+                selectedItem.GetComponent<Renderer>().material = defaultMat;
+            }
+            selectedItem = null;
+        }
+
+    }
+
+    Transform NewIsLookingAtItem()
+    {
+        for (int i = 0; i < collisions.Length; i++)
+        {
+            if (collisions[i].gameObject.tag == "Item" && collisions[i].gameObject)
+            {
+                return collisions[i].transform;
+
+            }
+        }
+
+        return null;
+    }
+
     bool IsLookingAtItem()
     {
         if (raycastFromHand.transform != null && raycastFromHand.transform.CompareTag("Item") && selectedItem != raycastFromHand.transform && !isHoldingItem)
@@ -217,7 +283,7 @@ public class MouseLook : MonoBehaviour
         isHoldingItem = true;
         heldItem = itemToPickUp;
         itemToPickUp.SetParent(hand);
-        itemToPickUp.localPosition = new Vector3(0, 0, -5);
+        itemToPickUp.localPosition = new Vector3(heldItemPosX, heldItemPosY, heldItemPosZ);
 
         itemToPickUp.GetComponent<Rigidbody>().useGravity = false;
         itemToPickUp.GetComponent<Rigidbody>().isKinematic = true;
