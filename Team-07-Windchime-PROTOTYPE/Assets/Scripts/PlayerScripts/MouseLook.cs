@@ -231,7 +231,7 @@ public class MouseLook : MonoBehaviour
     void NewSelectObj()
     {
 
-        if (NewIsLookingAtItem())
+        if (NewIsLookingAtItem() && !isHoldingItem)
         {
             selectedItem = NewIsLookingAtItem();
 
