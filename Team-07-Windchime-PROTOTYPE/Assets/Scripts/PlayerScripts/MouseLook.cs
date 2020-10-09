@@ -309,7 +309,7 @@ public class MouseLook : MonoBehaviour
     {
         isHoldingItem = false;
 
-        heldItem.GetComponent<Rigidbody>().useGravity = true;
+        heldItem.GetComponent<Rigidbody>().useGravity = false;
         heldItem.GetComponent<Rigidbody>().isKinematic = false;
 
         heldItem.GetComponent<Rigidbody>().AddForce(-hand.forward * tempThrowForce, ForceMode.Impulse);
