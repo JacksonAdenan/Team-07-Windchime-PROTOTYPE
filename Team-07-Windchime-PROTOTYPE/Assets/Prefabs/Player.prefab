@@ -355,6 +355,7 @@ MonoBehaviour:
   heldItemPosX: 0
   heldItemPosY: 0.4
   heldItemPosZ: 0
+  tempThrowForce: 8
   playerBody: {fileID: 6999435598105673451}
   itemSelectedMat: {fileID: 2100000, guid: bcc9153d6debb2f4f9aab5383826e2cd, type: 2}
   hand: {fileID: 8433573887849771258}
