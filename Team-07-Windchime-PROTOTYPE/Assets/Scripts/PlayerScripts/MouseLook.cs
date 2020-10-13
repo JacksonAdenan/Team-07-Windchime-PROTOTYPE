@@ -75,6 +75,7 @@ public class MouseLook : MonoBehaviour
 
     PlayerState currentPlayerState = PlayerState.LOOKING_AT_NOTHING;
 
+    Vector3 throwDirection;
 
     // Start is called before the first frame update
     void Start()
@@ -127,6 +128,9 @@ public class MouseLook : MonoBehaviour
         //    ThrowItem();
         //}
         Debug.Log(currentPlayerState.ToString());
+
+        Debug.DrawRay(heldItem.position, throwDirection * 100);
+       
     }
 
     void InputState()
@@ -388,13 +392,14 @@ public class MouseLook : MonoBehaviour
         Vector3 screenSpaceCentre = new Vector3(0.5f, 0.5f, 0);
         Quaternion throwTarget = Quaternion.LookRotation(gameObject.GetComponent<Camera>().ViewportToWorldPoint(screenSpaceCentre));
         //Ray hitScan = gameObject.GetComponent<Camera>().ScreenPointToRay(screenSpaceCentre)
-
+        throwDirection = (throwTarget * heldItem.position).normalized;
+        
         //isHoldingItem = false;
         
         heldItem.GetComponent<Rigidbody>().useGravity = false;
         heldItem.GetComponent<Rigidbody>().isKinematic = false;
 
-        heldItem.GetComponent<Rigidbody>().AddForce((gameObject.GetComponent<Camera>().transform.forward) * tempThrowForce, ForceMode.Impulse);
+        heldItem.GetComponent<Rigidbody>().AddForce( * throwTarget, ForceMode.Impulse);
 
         isHoldingItem = false;
         heldItem.parent = null;
