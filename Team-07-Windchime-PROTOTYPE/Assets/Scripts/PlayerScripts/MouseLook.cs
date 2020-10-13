@@ -131,22 +131,52 @@ public class MouseLook : MonoBehaviour
 
     void InputState()
     {
-        if (Input.GetKeyDown(KeyCode.E) && currentPlayerState == PlayerState.LOOKING_AT_ITEM)
+        //if (Input.GetKeyDown(KeyCode.E) && currentPlayerState == PlayerState.LOOKING_AT_ITEM)
+        //{
+        //    PickUpItem(selectedItem);
+        //
+        //}
+        //else if (Input.GetKeyDown(KeyCode.C) && currentPlayerState == PlayerState.LOOKING_AT_ITEM)
+        //{
+        //    Debug.Log("Cutting ingredient.");
+        //}
+        //else if (Input.GetKeyDown(KeyCode.E) && currentPlayerState == PlayerState.HOLDING_ITEM)
+        //{
+        //    DropItem();
+        //}
+        //else if (Input.GetKeyDown(KeyCode.F) && currentPlayerState == PlayerState.HOLDING_ITEM)
+        //{
+        //    ThrowItem();
+        //}
+        switch (currentPlayerState)
         {
-            PickUpItem(selectedItem);
-     
-        }
-        else if (Input.GetKeyDown(KeyCode.C) && currentPlayerState == PlayerState.LOOKING_AT_ITEM)
-        {
-            Debug.Log("Cutting ingredient.");
-        }
-        else if (Input.GetKeyDown(KeyCode.E) && currentPlayerState == PlayerState.HOLDING_ITEM)
-        {
-            DropItem();
-        }
-        else if (Input.GetKeyDown(KeyCode.F) && currentPlayerState == PlayerState.HOLDING_ITEM)
-        {
-            ThrowItem();
+            case PlayerState.LOOKING_AT_ITEM:
+                if (Input.GetKeyDown(KeyCode.E))
+                {
+                    PickUpItem(selectedItem);
+                }
+                else if (Input.GetKeyDown(KeyCode.C))
+                {
+                    Debug.Log("Cutting ingredient.");
+                }
+                break;
+
+            case PlayerState.HOLDING_ITEM:
+                if (Input.GetKeyDown(KeyCode.E))
+                {
+                    DropItem();
+                }
+                else if (Input.GetKeyDown(KeyCode.F))
+                {
+                    ThrowItem();
+                }
+                break;
+
+            case PlayerState.LOOKING_AT_NOTHING:
+                break;
+            case PlayerState.LOOKING_AT_APPLIANCE:
+                break;
+
         }
     }
 
