@@ -10,11 +10,13 @@ public enum CameraMode
     pauseMode
 }
 
-public enum InteractMode
+public enum PlayerState
 { 
-    holdingItem,
-    lookingAtItem,
-    appliance
+    LOOKING_AT_NOTHING,
+    HOLDING_ITEM,
+    LOOKING_AT_ITEM,
+    LOOKING_AT_APPLIANCE
+
 }
 public class MouseLook : MonoBehaviour
 {
@@ -71,6 +73,8 @@ public class MouseLook : MonoBehaviour
     RaycastHit raycastFromScreen;
     Collider[] collisions;
 
+    PlayerState currentPlayerState = PlayerState.LOOKING_AT_NOTHING;
+
 
     // Start is called before the first frame update
     void Start()
@@ -104,19 +108,62 @@ public class MouseLook : MonoBehaviour
 
         NewSelectObj();
 
-        if (Input.GetKeyDown(KeyCode.E) && !isHoldingItem && selectedItem)
+        UpdatePlayerState();
+        InputState();
+        //if (Input.GetKeyDown(KeyCode.E) && !isHoldingItem && selectedItem)
+        //{
+        //    PickUpItem(selectedItem);
+        //}
+        //else if (Input.GetKeyDown(KeyCode.C) && !isHoldingItem && selectedItem)
+        //{
+        //    Debug.Log("Cutting ingredient.");
+        //}
+        //else if (Input.GetKeyDown(KeyCode.E) && isHoldingItem)
+        //{
+        //    DropItem();
+        //}
+        //else if (Input.GetKeyDown(KeyCode.F) && isHoldingItem)
+        //{
+        //    ThrowItem();
+        //}
+        Debug.Log(currentPlayerState.ToString());
+    }
+
+    void InputState()
+    {
+        if (Input.GetKeyDown(KeyCode.E) && currentPlayerState == PlayerState.LOOKING_AT_ITEM)
         {
             PickUpItem(selectedItem);
+     
         }
-        else if (Input.GetKeyDown(KeyCode.E) && isHoldingItem)
+        else if (Input.GetKeyDown(KeyCode.C) && currentPlayerState == PlayerState.LOOKING_AT_ITEM)
+        {
+            Debug.Log("Cutting ingredient.");
+        }
+        else if (Input.GetKeyDown(KeyCode.E) && currentPlayerState == PlayerState.HOLDING_ITEM)
         {
             DropItem();
         }
-        else if (Input.GetKeyDown(KeyCode.F) && isHoldingItem)
+        else if (Input.GetKeyDown(KeyCode.F) && currentPlayerState == PlayerState.HOLDING_ITEM)
         {
             ThrowItem();
         }
+    }
 
+    void UpdatePlayerState()
+    {
+        if (!isHoldingItem && selectedItem)
+        {
+            currentPlayerState = PlayerState.LOOKING_AT_ITEM;
+        }
+        else if (!isHoldingItem && !selectedItem)
+        {
+            currentPlayerState = PlayerState.LOOKING_AT_NOTHING;
+        }
+        else if (isHoldingItem)
+        {
+            currentPlayerState = PlayerState.HOLDING_ITEM;
+        }
     }
     void CameraState()
     {

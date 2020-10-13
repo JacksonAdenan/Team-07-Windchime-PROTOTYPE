@@ -16097,6 +16097,11 @@ PrefabInstance:
       propertyPath: ApplianceUI
       value: 
       objectReference: {fileID: 1686542868}
+    - target: {fileID: 6999435600160748223, guid: 4555a5c923190204593b33d328f2b91a,
+        type: 3}
+      propertyPath: PickUpUIYPos
+      value: 0.3
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 4555a5c923190204593b33d328f2b91a, type: 3}
 --- !u!1 &2083423575 stripped
