@@ -307,17 +307,24 @@ public class MouseLook : MonoBehaviour
 
     void ThrowItem()
     {
-        isHoldingItem = false;
+        
+        Vector3 screenSpaceCentre = new Vector3(0.5f, 0.5f, 0);
+        Quaternion throwTarget = Quaternion.LookRotation(gameObject.GetComponent<Camera>().ViewportToWorldPoint(screenSpaceCentre));
+        //Ray hitScan = gameObject.GetComponent<Camera>().ScreenPointToRay(screenSpaceCentre)
 
+        //isHoldingItem = false;
+        
         heldItem.GetComponent<Rigidbody>().useGravity = false;
         heldItem.GetComponent<Rigidbody>().isKinematic = false;
 
-        heldItem.GetComponent<Rigidbody>().AddForce(-hand.forward * tempThrowForce, ForceMode.Impulse);
+        heldItem.GetComponent<Rigidbody>().AddForce((gameObject.GetComponent<Camera>().transform.forward) * tempThrowForce, ForceMode.Impulse);
 
+        isHoldingItem = false;
         heldItem.parent = null;
         heldItem = null;
     }
 
+    
     void DisplayPickupUI()
     {
         if (selectedItem)
