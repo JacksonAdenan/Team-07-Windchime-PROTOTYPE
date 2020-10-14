@@ -27,18 +27,18 @@ public class MenuManager : MonoBehaviour
     TMP_Dropdown colourDropdown;
     TMP_Dropdown meatVegDropdown;
 
-    Toggle spicyToggle;
-    Toggle chunkyToggle;
+    TMP_InputField spicyInput;
+    TMP_InputField chunkyInput;
 
     TextMeshProUGUI orderCreatedText;
     float orderCreatedTextTimer;
 
     // Current order text stuff //
-    TextMeshProUGUI soup;
-    TextMeshProUGUI colour;
-    TextMeshProUGUI meatVeg;
-    TextMeshProUGUI spicy;
-    TextMeshProUGUI chunky;
+    TextMeshProUGUI soupDisplayText;
+    TextMeshProUGUI colourDisplayText;
+    TextMeshProUGUI meatVegDisplayText;
+    TextMeshProUGUI spicyDisplayText;
+    TextMeshProUGUI chunkyDisplayText;
 
     // Player UI stuff //
     TextMeshProUGUI heldItemText;
@@ -62,11 +62,11 @@ public class MenuManager : MonoBehaviour
         orderOrganiser = orderUI.transform.Find("OrderCreationStuff");
         currentOrderOrganiser = orderUI.transform.Find("OrderList");
 
-        soup = currentOrderOrganiser.Find("soupName").GetComponent<TextMeshProUGUI>();
-        colour = currentOrderOrganiser.Find("colourPreference").GetComponent<TextMeshProUGUI>();
-        meatVeg = currentOrderOrganiser.Find("meatVegPref").GetComponent<TextMeshProUGUI>();
-        spicy = currentOrderOrganiser.Find("spicy").GetComponent<TextMeshProUGUI>();
-        chunky = currentOrderOrganiser.Find("chunky").GetComponent<TextMeshProUGUI>();
+        soupDisplayText = currentOrderOrganiser.Find("soupName").GetComponent<TextMeshProUGUI>();
+        colourDisplayText = currentOrderOrganiser.Find("colourPreference").GetComponent<TextMeshProUGUI>();
+        meatVegDisplayText = currentOrderOrganiser.Find("meatVegPref").GetComponent<TextMeshProUGUI>();
+        spicyDisplayText = currentOrderOrganiser.Find("spicy").GetComponent<TextMeshProUGUI>();
+        chunkyDisplayText = currentOrderOrganiser.Find("chunky").GetComponent<TextMeshProUGUI>();
 
         orderCreatedText = orderOrganiser.Find("orderCreatedText").GetComponent<TextMeshProUGUI>();
         orderCreatedText.gameObject.SetActive(false);
@@ -83,8 +83,8 @@ public class MenuManager : MonoBehaviour
         meatVegDropdown = orderOrganiser.Find("meatVegDropdown").GetComponent<TMP_Dropdown>();
         TextMeshProUGUI meatVegDropdownLabel = meatVegDropdown.transform.Find("Label").GetComponent<TextMeshProUGUI>();
 
-        spicyToggle = orderOrganiser.Find("spicyToggle").GetComponent<Toggle>();
-        chunkyToggle = orderOrganiser.Find("chunkyToggle").GetComponent<Toggle>();
+        spicyInput = orderOrganiser.Find("spicyInput").GetComponent<TMP_InputField>();
+        chunkyInput = orderOrganiser.Find("chunkyInput").GetComponent<TMP_InputField>();
 
         
 
@@ -193,17 +193,17 @@ public class MenuManager : MonoBehaviour
 
     public void CreateOrder()
     {
-        OrderManager.AddOrder(Order.CreateOrder(soupDropdown, colourDropdown, meatVegDropdown, spicyToggle, chunkyToggle));
+        OrderManager.AddOrder(OrderManager.CreateOrder(soupDropdown, colourDropdown, meatVegDropdown, spicyInput, chunkyInput));
         orderCreatedText.gameObject.SetActive(true);
         orderCreatedTextTimer = 0;
 
-        DisplayCurrentOrder(soup, colour, meatVeg, spicy, chunky);
+        DisplayCurrentOrder(soupDisplayText, colourDisplayText, meatVegDisplayText, spicyDisplayText, chunkyDisplayText);
           
     }
 
     void DisplayCurrentOrder(TextMeshProUGUI soup, TextMeshProUGUI colour, TextMeshProUGUI meatVeg, TextMeshProUGUI spicy, TextMeshProUGUI chunky)
     {
-        soup.text = OrderManager.currentOrders[0].mainSoup.soupName;
+        //soup.text = OrderManager.currentOrders[0].mainSoup.soupName;
         colour.text = OrderManager.currentOrders[0].colourPreference.name;
 
         if (!OrderManager.currentOrders[0].noMeat && !OrderManager.currentOrders[0].noVeg)
@@ -219,25 +219,9 @@ public class MenuManager : MonoBehaviour
             meatVeg.text = "Veg not allowed";
         }
 
-        switch (OrderManager.currentOrders[0].isSpicy)
-        {
-            case true:
-                spicy.text = "Spicy";
-                break;
-            case false:
-                spicy.text = "No spice";
-                break;
-        }
+        spicy.text = OrderManager.currentOrders[0].spicyness.ToString();
+        chunky.text = OrderManager.currentOrders[0].chunkiness.ToString();
 
-        switch (OrderManager.currentOrders[0].isChunky)
-        {
-            case true:
-                chunky.text = "Chunky";
-                break;
-            case false:
-                chunky.text = "No chunky";
-                break;
-        }
     }
 
     void DisplayHeldItem()
