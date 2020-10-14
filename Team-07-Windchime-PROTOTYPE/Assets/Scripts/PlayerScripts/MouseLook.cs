@@ -75,7 +75,7 @@ public class MouseLook : MonoBehaviour
 
     PlayerState currentPlayerState = PlayerState.LOOKING_AT_NOTHING;
 
-    Vector3 throwDirection;
+    
 
     // Start is called before the first frame update
     void Start()
@@ -129,7 +129,7 @@ public class MouseLook : MonoBehaviour
         //}
         Debug.Log(currentPlayerState.ToString());
 
-        Debug.DrawRay(heldItem.position, throwDirection * 100);
+        
        
     }
 
@@ -388,22 +388,28 @@ public class MouseLook : MonoBehaviour
 
     void ThrowItem()
     {
-        
-        Vector3 screenSpaceCentre = new Vector3(0.5f, 0.5f, 0);
-        Quaternion throwTarget = Quaternion.LookRotation(gameObject.GetComponent<Camera>().ViewportToWorldPoint(screenSpaceCentre));
-        //Ray hitScan = gameObject.GetComponent<Camera>().ScreenPointToRay(screenSpaceCentre)
-        throwDirection = (throwTarget * heldItem.position).normalized;
+        RaycastHit target;
+        Vector3 throwDirection;
+        Physics.Raycast(gameObject.transform.position, gameObject.GetComponent<Camera>().transform.forward * 100, out target, 100, ~(1 << 2));
+        if (Physics.Raycast(gameObject.transform.position, gameObject.GetComponent<Camera>().transform.forward * 100, 100, ~(1 << 2)))
+        { 
+            throwDirection = (target.point - heldItem.position).normalized;
+            heldItem.GetComponent<Rigidbody>().useGravity = false;
+            heldItem.GetComponent<Rigidbody>().isKinematic = false;
+            heldItem.GetComponent<Rigidbody>().AddForce(throwDirection * tempThrowForce, ForceMode.Impulse);
+
+
+
+            isHoldingItem = false;
+            heldItem.parent = null;
+            heldItem = null;
+
+            Debug.Log("throw activated");
+        }
         
         //isHoldingItem = false;
         
-        heldItem.GetComponent<Rigidbody>().useGravity = false;
-        heldItem.GetComponent<Rigidbody>().isKinematic = false;
-
-        heldItem.GetComponent<Rigidbody>().AddForce( * throwTarget, ForceMode.Impulse);
-
-        isHoldingItem = false;
-        heldItem.parent = null;
-        heldItem = null;
+        
     }
 
     
