@@ -405,11 +405,7 @@ public class MouseLook : MonoBehaviour
             heldItem = null;
 
             Debug.Log("throw activated");
-        }
-        
-        //isHoldingItem = false;
-        
-        
+        }    
     }
 
     

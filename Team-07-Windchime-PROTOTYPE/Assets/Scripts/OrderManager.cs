@@ -17,7 +17,7 @@ public class OrderManager : MonoBehaviour
         currentOrders.Add(orderToAdd);
     }
 
-    public static Order CreateOrder(TMP_Dropdown soup, TMP_Dropdown colourPreference, TMP_Dropdown meatVegPref, TMP_InputField spicy, TMP_InputField chunky)
+    public static Order CreateOrder(TMP_Dropdown colourPreference, TMP_Dropdown meatVegPref, TMP_InputField spicy, TMP_InputField chunky)
     {
         Order newOrder = new Order();
 
