@@ -283,6 +283,7 @@ public class MouseLook : MonoBehaviour
         if (IsLookingAtItem())
         {
             selectedItem = raycastFromHand.transform;
+
             defaultMat = selectedItem.GetComponent<Renderer>().material;
             selectedItem.GetComponent<Renderer>().material = itemSelectedMat;
            
