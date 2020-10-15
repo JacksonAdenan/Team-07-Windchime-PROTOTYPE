@@ -1445,7 +1445,7 @@ PrefabInstance:
     - target: {fileID: 8695368405510417178, guid: 6e7de3b4f64609b4c87771e00b08285a,
         type: 3}
       propertyPath: m_Name
-      value: OrderManager 1
+      value: OrderManager
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 6e7de3b4f64609b4c87771e00b08285a, type: 3}
@@ -15035,11 +15035,6 @@ PrefabInstance:
         type: 3}
       propertyPath: m_LocalPosition.z
       value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 6050370088772264811, guid: f94e74285cdd2ff4e9a3e09ed62a57e6,
-        type: 3}
-      propertyPath: m_IsActive
-      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: f94e74285cdd2ff4e9a3e09ed62a57e6, type: 3}
