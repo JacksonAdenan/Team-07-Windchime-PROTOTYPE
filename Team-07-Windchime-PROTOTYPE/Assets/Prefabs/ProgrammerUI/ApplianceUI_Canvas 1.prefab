@@ -323,7 +323,7 @@ GameObject:
   - component: {fileID: 8724806588895726640}
   - component: {fileID: 8724806588895726643}
   m_Layer: 5
-  m_Name: PickUp_Canvas 1
+  m_Name: ApplianceUI_Canvas 1
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
