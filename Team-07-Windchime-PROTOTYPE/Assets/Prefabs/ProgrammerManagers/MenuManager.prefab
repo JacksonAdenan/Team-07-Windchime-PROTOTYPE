@@ -47,3 +47,15 @@ MonoBehaviour:
   orderUI: {fileID: 0}
   pauseUI: {fileID: 0}
   debugUI: {fileID: 0}
+  orderCreatedText: {fileID: 0}
+  colourDropdown: {fileID: 0}
+  meatVegDropdown: {fileID: 0}
+  spicyInput: {fileID: 0}
+  chunkyInput: {fileID: 0}
+  colourDisplayText: {fileID: 0}
+  meatVegDisplayText: {fileID: 0}
+  spicyDisplayText: {fileID: 0}
+  chunkyDisplayText: {fileID: 0}
+  heldItemText: {fileID: 0}
+  selectedItemText: {fileID: 0}
+  selectedApplianceText: {fileID: 0}

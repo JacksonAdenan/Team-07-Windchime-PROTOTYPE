@@ -10,11 +10,13 @@ public enum CameraMode
     pauseMode
 }
 
-public enum InteractMode
+public enum PlayerState
 { 
-    holdingItem,
-    lookingAtItem,
-    appliance
+    LOOKING_AT_NOTHING,
+    HOLDING_ITEM,
+    LOOKING_AT_ITEM,
+    LOOKING_AT_APPLIANCE
+
 }
 public class MouseLook : MonoBehaviour
 {
@@ -23,9 +25,20 @@ public class MouseLook : MonoBehaviour
     public float mouseSensitivity = 100f;
     public float handControlSensitivity = 100f;
     public float handZDistance = 0.7f;
+    public float handYCeilingLimit = 0.0f;
+    public float handYFloorLimit = 0.0f;
+    public float handXLeftLimit = 0.0f;
+    public float handXRightLimit = 0.0f;
     public float PickUpUIYPos = 0.0f;
     public float ApplianceUIZPos = 3.0f;
     public float ApplianceUIYPos = 5.0f;
+    public float handCollisionRadius = 0;
+    public float heldItemPosX = 0;
+    public float heldItemPosY = 0;
+    public float heldItemPosZ = 0;
+
+    public float tempThrowForce = 0;
+
     // ------------------------------------------ //
 
     // Inspector Variables //
@@ -35,6 +48,8 @@ public class MouseLook : MonoBehaviour
     
 
     public Transform hand;
+    public Transform collisionSphere;
+
     public Canvas PickUpUI;
     public Canvas ApplianceUI;
     // ------------------------------------------ //
@@ -56,13 +71,19 @@ public class MouseLook : MonoBehaviour
     // Different raycasts //
     RaycastHit raycastFromHand;
     RaycastHit raycastFromScreen;
+    Collider[] collisions;
 
+    PlayerState currentPlayerState = PlayerState.LOOKING_AT_NOTHING;
 
+    
 
     // Start is called before the first frame update
     void Start()
     {
         Cursor.lockState = CursorLockMode.Locked;
+
+
+        
     }
 
     // Update is called once per frame
@@ -75,23 +96,108 @@ public class MouseLook : MonoBehaviour
         // Doing raycast from screen //
         Physics.Raycast(gameObject.transform.position, gameObject.transform.forward * 5, out raycastFromScreen, 5);
 
+        // Doing sphere check //
+        collisions = Physics.OverlapSphere(collisionSphere.position, handCollisionRadius);
+
         CameraState();
 
 
-        SelectObj();
+        //SelectObj();
         
         DisplayPickupUI();
         DisplayApplianceIU();
 
-        if (Input.GetKeyDown(KeyCode.E) && !isHoldingItem && selectedItem)
-        {
-            PickUpItem(selectedItem);
-        }
-        else if (Input.GetKeyDown(KeyCode.E) && isHoldingItem)
-        {
-            DropItem();
-        }
+        NewSelectObj();
 
+        UpdatePlayerState();
+        InputState();
+        //if (Input.GetKeyDown(KeyCode.E) && !isHoldingItem && selectedItem)
+        //{
+        //    PickUpItem(selectedItem);
+        //}
+        //else if (Input.GetKeyDown(KeyCode.C) && !isHoldingItem && selectedItem)
+        //{
+        //    Debug.Log("Cutting ingredient.");
+        //}
+        //else if (Input.GetKeyDown(KeyCode.E) && isHoldingItem)
+        //{
+        //    DropItem();
+        //}
+        //else if (Input.GetKeyDown(KeyCode.F) && isHoldingItem)
+        //{
+        //    ThrowItem();
+        //}
+        Debug.Log(currentPlayerState.ToString());
+
+        
+       
+    }
+
+    void InputState()
+    {
+        //if (Input.GetKeyDown(KeyCode.E) && currentPlayerState == PlayerState.LOOKING_AT_ITEM)
+        //{
+        //    PickUpItem(selectedItem);
+        //
+        //}
+        //else if (Input.GetKeyDown(KeyCode.C) && currentPlayerState == PlayerState.LOOKING_AT_ITEM)
+        //{
+        //    Debug.Log("Cutting ingredient.");
+        //}
+        //else if (Input.GetKeyDown(KeyCode.E) && currentPlayerState == PlayerState.HOLDING_ITEM)
+        //{
+        //    DropItem();
+        //}
+        //else if (Input.GetKeyDown(KeyCode.F) && currentPlayerState == PlayerState.HOLDING_ITEM)
+        //{
+        //    ThrowItem();
+        //}
+        switch (currentPlayerState)
+        {
+            case PlayerState.LOOKING_AT_ITEM:
+                if (Input.GetKeyDown(KeyCode.E))
+                {
+                    PickUpItem(selectedItem);
+                }
+                else if (Input.GetKeyDown(KeyCode.C))
+                {
+                    Debug.Log("Cutting ingredient.");
+                }
+                break;
+
+            case PlayerState.HOLDING_ITEM:
+                if (Input.GetKeyDown(KeyCode.E))
+                {
+                    DropItem();
+                }
+                else if (Input.GetKeyDown(KeyCode.F))
+                {
+                    ThrowItem();
+                }
+                break;
+
+            case PlayerState.LOOKING_AT_NOTHING:
+                break;
+            case PlayerState.LOOKING_AT_APPLIANCE:
+                break;
+
+        }
+    }
+
+    void UpdatePlayerState()
+    {
+        if (!isHoldingItem && selectedItem)
+        {
+            currentPlayerState = PlayerState.LOOKING_AT_ITEM;
+        }
+        else if (!isHoldingItem && !selectedItem)
+        {
+            currentPlayerState = PlayerState.LOOKING_AT_NOTHING;
+        }
+        else if (isHoldingItem)
+        {
+            currentPlayerState = PlayerState.HOLDING_ITEM;
+        }
     }
     void CameraState()
     {
@@ -99,14 +205,14 @@ public class MouseLook : MonoBehaviour
         {
             case CameraMode.lookMode:
                 CameraLook();
-                if (Input.GetMouseButtonDown(1))
+                if (Input.GetMouseButton(1))
                 {
                     currentCameraMode = CameraMode.handMode;
                 }
                 break;
             case CameraMode.handMode:
                 CameraHandControl();
-                if (Input.GetMouseButtonDown(1))
+                if (Input.GetMouseButtonUp(1))
                 {
                     currentCameraMode = CameraMode.lookMode;
                 }
@@ -142,15 +248,31 @@ public class MouseLook : MonoBehaviour
         hand.transform.position += handMovement * Time.deltaTime;
 
         handPos = hand.transform.localPosition;
+        
         handPos.z = Mathf.Clamp(handPos.z, handZDistance, handZDistance);
-        handPos.y = Mathf.Clamp(handPos.y, -0.3f, 0.3f);
-        handPos.x = Mathf.Clamp(handPos.x, -0.5f, 0.5f);
+        handPos.y = Mathf.Clamp(handPos.y, handYFloorLimit, handYCeilingLimit);
+        handPos.x = Mathf.Clamp(handPos.x, handXLeftLimit, handXRightLimit);
+
+
         hand.transform.localPosition = handPos;
     }
 
     void CameraPause()
     { 
         
+    }
+
+    void SetSelectedItem(Transform itemToSelect)
+    {
+        selectedItem = itemToSelect;
+        defaultMat = selectedItem.GetComponent<Renderer>().material;
+        selectedItem.GetComponent<Renderer>().material = itemSelectedMat;
+    }
+
+    void RemoveSelectedItem()
+    {
+        selectedItem.GetComponent<Renderer>().material = defaultMat;
+        selectedItem = null;
     }
 
     void SelectObj()
@@ -161,6 +283,7 @@ public class MouseLook : MonoBehaviour
         if (IsLookingAtItem())
         {
             selectedItem = raycastFromHand.transform;
+
             defaultMat = selectedItem.GetComponent<Renderer>().material;
             selectedItem.GetComponent<Renderer>().material = itemSelectedMat;
            
@@ -193,6 +316,47 @@ public class MouseLook : MonoBehaviour
 
     }
 
+    void NewSelectObj()
+    {
+
+        if (NewIsLookingAtItem() && !isHoldingItem)
+        {
+            selectedItem = NewIsLookingAtItem();
+
+            // This if statement is a cheap fix for a badly written overall system... FIX IT ONE DAY //
+            if (!defaultMat)
+            { 
+                defaultMat = selectedItem.GetComponent<Renderer>().material;
+            }
+            selectedItem.GetComponent<Renderer>().material = itemSelectedMat;
+        }
+        
+
+        else
+        {
+            if (selectedItem != null)
+            {
+                selectedItem.GetComponent<Renderer>().material = defaultMat;
+            }
+            selectedItem = null;
+        }
+
+    }
+
+    Transform NewIsLookingAtItem()
+    {
+        for (int i = 0; i < collisions.Length; i++)
+        {
+            if (collisions[i].gameObject.tag == "Item" && collisions[i].gameObject)
+            {
+                return collisions[i].transform;
+
+            }
+        }
+
+        return null;
+    }
+
     bool IsLookingAtItem()
     {
         if (raycastFromHand.transform != null && raycastFromHand.transform.CompareTag("Item") && selectedItem != raycastFromHand.transform && !isHoldingItem)
@@ -207,7 +371,7 @@ public class MouseLook : MonoBehaviour
         isHoldingItem = true;
         heldItem = itemToPickUp;
         itemToPickUp.SetParent(hand);
-        itemToPickUp.localPosition = new Vector3(0, 0, -5);
+        itemToPickUp.localPosition = new Vector3(heldItemPosX, heldItemPosY, heldItemPosZ);
 
         itemToPickUp.GetComponent<Rigidbody>().useGravity = false;
         itemToPickUp.GetComponent<Rigidbody>().isKinematic = true;
@@ -223,6 +387,29 @@ public class MouseLook : MonoBehaviour
         heldItem = null;
     }
 
+    void ThrowItem()
+    {
+        RaycastHit target;
+        Vector3 throwDirection;
+        Physics.Raycast(gameObject.transform.position, gameObject.GetComponent<Camera>().transform.forward * 100, out target, 100, ~(1 << 2));
+        if (Physics.Raycast(gameObject.transform.position, gameObject.GetComponent<Camera>().transform.forward * 100, 100, ~(1 << 2)))
+        { 
+            throwDirection = (target.point - heldItem.position).normalized;
+            heldItem.GetComponent<Rigidbody>().useGravity = false;
+            heldItem.GetComponent<Rigidbody>().isKinematic = false;
+            heldItem.GetComponent<Rigidbody>().AddForce(throwDirection * tempThrowForce, ForceMode.Impulse);
+
+
+
+            isHoldingItem = false;
+            heldItem.parent = null;
+            heldItem = null;
+
+            Debug.Log("throw activated");
+        }    
+    }
+
+    
     void DisplayPickupUI()
     {
         if (selectedItem)

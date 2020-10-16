@@ -171,6 +171,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   soupName: chicken soup
-  spicyValue: 0
-  chunkyValue: 0
+  spicyValue: 5
+  chunkyValue: 6
   restrictedIngredient: apple

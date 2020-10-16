@@ -5,18 +5,19 @@ using TMPro;
 using UnityEngine.UI;
 public class Order
 {
-    public Soup mainSoup;
+    public string orderName;
     public Colour colourPreference;
-    public bool isSpicy;
-    public bool isChunky;
+    public float spicyness;
+    public float chunkiness;
     public bool noMeat;
     public bool noVeg;
-    public Order(Soup mainSoup, Colour colourPreference, bool isSpicy, bool isChunky, bool meatPreference, bool vegPreference)
+    public Order(Colour colourPreference, float spicyValue, float chunkyValue, bool meatPreference, bool vegPreference)
     {
-        this.mainSoup = mainSoup;
+        this.orderName = "NOT ASSIGNED BY ORDERMANAGER";
+
         this.colourPreference = colourPreference;
-        this.isSpicy = isSpicy;
-        this.isChunky = isChunky;
+        this.spicyness = spicyValue;
+        this.chunkiness = chunkyValue;
     }
     public Order()
     { 
@@ -34,47 +35,5 @@ public class Order
         return null;
     }
 
-    public static Order CreateOrder(TMP_Dropdown soup, TMP_Dropdown colourPreference, TMP_Dropdown meatVegPref, Toggle spicy, Toggle chunky)
-    {
-        Order newOrder = new Order();
-
-        newOrder.mainSoup = GetSoupFromDropdown(soup.value, soup);
-        newOrder.colourPreference = new Colour("none");
-
-        if (spicy.isOn)
-        {
-            newOrder.isSpicy = true;
-        }
-        else
-        {
-            newOrder.isSpicy = false;
-        }
-
-        if (chunky.isOn)
-        {
-            newOrder.isChunky = true;
-        }
-        else
-        {
-            newOrder.isChunky = false;
-        }
-
-        if (meatVegPref.value == 0)
-        {
-            newOrder.noMeat = false;
-            newOrder.noVeg = false;
-        }
-        else if (meatVegPref.value == 1)
-        {
-            newOrder.noMeat = true;
-            newOrder.noVeg = false;
-        }
-        else if (meatVegPref.value == 2)
-        {
-            newOrder.noVeg = true;
-            newOrder.noMeat = false;
-        }
-
-        return newOrder;
-    }
+    
 }

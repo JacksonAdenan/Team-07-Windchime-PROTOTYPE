@@ -24,10 +24,11 @@ public class PlayerMovement : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        // This used to have a ground mask check and would only classify objects tagged with "Ground" as actual ground.
         isGrounded = Physics.CheckSphere(groundCheck.position, groundDistance, groundMask);
         if (isGrounded && velocity.y < 0)
         {
-            velocity.y = -2f;
+            velocity.y = -2;   
         }
 
         float x = Input.GetAxis("Horizontal");
