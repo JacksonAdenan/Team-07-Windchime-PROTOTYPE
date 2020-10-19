@@ -2,11 +2,13 @@
 using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
+using UnityEngine.UI;
 
 public enum CameraMode
 { 
     lookMode,
     handMode,
+    NEWMODE,
     pauseMode
 }
 
@@ -23,6 +25,7 @@ public class MouseLook : MonoBehaviour
     // Adjustable Values //
     // ------------------------------------------ //
     public float mouseSensitivity = 100f;
+    public float rotationSensitivity = 100f;
     public float handControlSensitivity = 100f;
     public float handZDistance = 0.7f;
     public float handYCeilingLimit = 0.0f;
@@ -52,8 +55,13 @@ public class MouseLook : MonoBehaviour
 
     public Canvas PickUpUI;
     public Canvas ApplianceUI;
-    // ------------------------------------------ //
 
+    public Canvas crosshairCanvas;
+    public Image crosshairImage;
+
+    public float xDeadZone;
+    public float yDeadZone;
+    // ------------------------------------------ //
 
 
     bool isHoldingItem = false;
@@ -77,6 +85,9 @@ public class MouseLook : MonoBehaviour
 
     
 
+    public float posX;
+    public float posY;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -99,7 +110,7 @@ public class MouseLook : MonoBehaviour
         // Doing sphere check //
         collisions = Physics.OverlapSphere(collisionSphere.position, handCollisionRadius);
 
-        CameraState();
+        CameraState(); // This is the old camera state swapping thing.
 
 
         //SelectObj();
@@ -199,6 +210,7 @@ public class MouseLook : MonoBehaviour
             currentPlayerState = PlayerState.HOLDING_ITEM;
         }
     }
+
     void CameraState()
     {
         switch (currentCameraMode)
@@ -230,11 +242,32 @@ public class MouseLook : MonoBehaviour
         float mouseX = Input.GetAxis("Mouse X") * mouseSensitivity * Time.deltaTime;
         float mouseY = Input.GetAxis("Mouse Y") * mouseSensitivity * Time.deltaTime;
 
-        xRotation -= mouseY;
-        xRotation = Mathf.Clamp(xRotation, -90f, 90f);
+        //xRotation -= mouseY;
+        //xRotation = Mathf.Clamp(xRotation, -90f, 90f);
 
-        transform.localRotation = Quaternion.Euler(xRotation, 0f, 0f);
-        playerBody.Rotate(Vector3.up * mouseX);
+        posX += mouseX;
+        posY += mouseY;
+
+        posX = Mathf.Clamp(posX, -xDeadZone, xDeadZone);
+        posY = Mathf.Clamp(posY, -yDeadZone, yDeadZone);
+
+        crosshairImage.transform.localPosition = new Vector3(posX, posY, 0);
+
+        if (posX == xDeadZone || posX == -xDeadZone || posY == yDeadZone || posY == -yDeadZone)
+        {
+            Debug.Log("Hit X Limit");
+
+            float rotMouseX = Input.GetAxis("Mouse X") * rotationSensitivity * Time.deltaTime;
+            float rotMouseY = Input.GetAxis("Mouse Y") * rotationSensitivity * Time.deltaTime;
+
+            xRotation -= rotMouseY;
+            xRotation = Mathf.Clamp(xRotation, -90f, 90f);
+            transform.localRotation = Quaternion.Euler(xRotation, 0f, 0f);
+            playerBody.Rotate(Vector3.up * rotMouseX);
+        }
+
+        //transform.localRotation = Quaternion.Euler(xRotation, 0f, 0f);
+        //playerBody.Rotate(Vector3.up * mouseX);
     }
 
     void CameraHandControl()
@@ -255,6 +288,8 @@ public class MouseLook : MonoBehaviour
 
 
         hand.transform.localPosition = handPos;
+
+      
     }
 
     void CameraPause()
