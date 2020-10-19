@@ -41,6 +41,7 @@ public class MouseLook : MonoBehaviour
     public float heldItemPosZ = 0;
 
     public float tempThrowForce = 0;
+    public float roationLerpSpeed;
 
     // ------------------------------------------ //
 
@@ -62,6 +63,8 @@ public class MouseLook : MonoBehaviour
 
     public float xDeadZone;
     public float yDeadZone;
+
+    public Transform randomObj;
     // ------------------------------------------ //
 
 
@@ -107,6 +110,7 @@ public class MouseLook : MonoBehaviour
 
         // Doing raycast from screen //
         Physics.Raycast(gameObject.transform.position, gameObject.transform.forward * 5, out raycastFromScreen, 5);
+        Debug.DrawRay(gameObject.transform.position, gameObject.transform.forward * 5, Color.white);
 
         // Doing sphere check //
         collisions = Physics.OverlapSphere(collisionSphere.position, handCollisionRadius);
@@ -140,7 +144,7 @@ public class MouseLook : MonoBehaviour
         //    ThrowItem();
         //}
         Debug.Log(currentPlayerState.ToString());
-
+        CentreCamera();
         
        
     }
@@ -224,7 +228,7 @@ public class MouseLook : MonoBehaviour
                 }
                 break;
             case CameraMode.handMode:
-                CameraHandControl();
+                CentreCamera();
                 if (Input.GetMouseButtonUp(1))
                 {
                     currentCameraMode = CameraMode.lookMode;
@@ -238,11 +242,22 @@ public class MouseLook : MonoBehaviour
         }
     }
 
+    void CentreCamera()
+    {
+        //gameObject.transform.LookAt(heldItem);
+        if (Input.GetKey(KeyCode.G))
+        { 
+            Vector3 direction = gameObject.transform.position - randomObj.transform.position;
+            direction.z = 0.0f;
+            Quaternion directionRotation = Quaternion.LookRotation(randomObj.transform.position - gameObject.transform.position);
+            transform.rotation = Quaternion.Slerp(transform.rotation, directionRotation, Time.deltaTime * roationLerpSpeed);
+        }
+    }
     void CameraLook()
     {
         float mouseX = Input.GetAxis("Mouse X") * mouseSensitivity * Time.deltaTime;
         float mouseY = Input.GetAxis("Mouse Y") * mouseSensitivity * Time.deltaTime;
-
+            
         //xRotation -= mouseY;
         //xRotation = Mathf.Clamp(xRotation, -90f, 90f);
 
