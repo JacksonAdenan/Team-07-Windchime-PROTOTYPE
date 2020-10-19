@@ -52,6 +52,7 @@ public class MouseLook : MonoBehaviour
 
     public Transform hand;
     public Transform collisionSphere;
+    public Transform realHandCentre;
 
     public Canvas PickUpUI;
     public Canvas ApplianceUI;
@@ -101,8 +102,8 @@ public class MouseLook : MonoBehaviour
     void Update()
     {
         // Doing raycast from hand //
-        Physics.Raycast(hand.position, hand.forward * 10, out raycastFromHand);
-        Debug.DrawRay(gameObject.transform.position, gameObject.transform.forward * 5, Color.blue);
+        Physics.Raycast(realHandCentre.transform.position, realHandCentre.transform.forward * 100, out raycastFromHand);
+        Debug.DrawRay(realHandCentre.transform.position, realHandCentre.transform.forward * 100, Color.blue);
 
         // Doing raycast from screen //
         Physics.Raycast(gameObject.transform.position, gameObject.transform.forward * 5, out raycastFromScreen, 5);
@@ -245,21 +246,34 @@ public class MouseLook : MonoBehaviour
         //xRotation -= mouseY;
         //xRotation = Mathf.Clamp(xRotation, -90f, 90f);
 
-        posX += mouseX;
-        posY += mouseY;
+        //posX += mouseX;
+        //posY += mouseY;
 
-        posX = Mathf.Clamp(posX, -xDeadZone, xDeadZone);
-        posY = Mathf.Clamp(posY, -yDeadZone, yDeadZone);
+        //crosshairImage.transform.localPosition = Mathf.Clamp(posX, -xDeadZone, xDeadZone);
+        //crosshairImage.transform.localPosition = Mathf.Clamp(posY, -yDeadZone, yDeadZone);
 
-        crosshairImage.transform.localPosition = new Vector3(posX, posY, 0);
+        //crosshairImage.transform.localPosition = new Vector3(posX, posY, 0);
+        Vector3 crossHairMovement = transform.right * mouseX + transform.up * mouseY;
+        crosshairImage.transform.position = gameObject.GetComponent<Camera>().WorldToScreenPoint(raycastFromHand.point);
 
-        if (posX == xDeadZone || posX == -xDeadZone || posY == yDeadZone || posY == -yDeadZone)
+        Vector3 handMovement = transform.right * mouseX + transform.up * mouseY;
+        hand.transform.position += handMovement * Time.deltaTime;
+        handPos = hand.transform.localPosition;
+
+        handPos.z = Mathf.Clamp(handPos.z, handZDistance, handZDistance);
+        handPos.y = Mathf.Clamp(handPos.y, handYFloorLimit, handYCeilingLimit);
+        handPos.x = Mathf.Clamp(handPos.x, handXLeftLimit, handXRightLimit);
+
+
+        hand.transform.localPosition = handPos;
+
+        if (handPos.x == handXLeftLimit || handPos.x == handXRightLimit || handPos.y == handYCeilingLimit || handPos.y == handYFloorLimit)
         {
             Debug.Log("Hit X Limit");
-
+        
             float rotMouseX = Input.GetAxis("Mouse X") * rotationSensitivity * Time.deltaTime;
             float rotMouseY = Input.GetAxis("Mouse Y") * rotationSensitivity * Time.deltaTime;
-
+        
             xRotation -= rotMouseY;
             xRotation = Mathf.Clamp(xRotation, -90f, 90f);
             transform.localRotation = Quaternion.Euler(xRotation, 0f, 0f);
